@@ -1,9 +1,9 @@
 <?php
 
-namespace AdminHelpers\Contracts\Notifications\Utilities;
+namespace AdminHelpers\Notifications\Utilities;
 
-use AdminHelpers\Contracts\Notifications\Models\NotificationsToken;
-use AdminHelpers\Contracts\Notifications\Utilities\HasUserNotifications;
+use AdminHelpers\Notifications\Models\NotificationsToken;
+use AdminHelpers\Notifications\Utilities\HasUserNotifications;
 
 trait HasUserNotifications
 {

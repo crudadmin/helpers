@@ -1,6 +1,6 @@
 <?php
 
-namespace AdminHelpers\Contracts\Notifications\Admin\Buttons;
+namespace AdminHelpers\Notifications\Admin\Buttons;
 
 use Admin\Eloquent\AdminModel;
 use Admin\Helpers\Button;

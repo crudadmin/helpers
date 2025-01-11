@@ -1,8 +1,8 @@
 <?php
 
-namespace AdminHelpers\Contracts\Notifications\Commands;
+namespace AdminHelpers\Notifications\Commands;
 
-use AdminHelpers\Contracts\Notifications\Utilities\NotificationManager;
+use AdminHelpers\Notifications\Utilities\NotificationManager;
 use Illuminate\Console\Command;
 
 class SendNotificationsCommand extends Command

@@ -1,8 +1,8 @@
 <?php
 
-namespace AdminHelpers\Contracts\Notifications\Models;
+namespace AdminHelpers\Notifications\Models;
 
-use AdminHelpers\Contracts\Notifications\Models\NotificationsRecipient;
+use AdminHelpers\Notifications\Models\NotificationsRecipient;
 use Admin\Eloquent\AdminModel;
 use Admin\Fields\Group;
 

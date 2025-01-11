@@ -4,7 +4,7 @@ return [
     'notifications' => [
         'enabled' => false,
 
-        'model' => AdminHelpers\Contracts\Notifications\Models\AppNotification::class,
+        'model' => AdminHelpers\Notifications\Models\AppNotification::class,
 
         'apps' => [],
 

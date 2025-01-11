@@ -1,8 +1,8 @@
 <?php
 
-namespace AdminHelpers\Contracts\Notifications\Models;
+namespace AdminHelpers\Notifications\Models;
 
-use AdminHelpers\Contracts\Notifications\Admin\Buttons\EnableDebugNotificationToken;
+use AdminHelpers\Notifications\Admin\Buttons\EnableDebugNotificationToken;
 use Admin\Eloquent\AdminModel;
 use Admin\Fields\Group;
 

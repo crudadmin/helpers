@@ -1,8 +1,8 @@
 <?php
 
-namespace AdminHelpers\Contracts\Notifications\Utilities;
+namespace AdminHelpers\Notifications\Utilities;
 
-use AdminHelpers\Contracts\Notifications\Models\NotificationsToken;
+use AdminHelpers\Notifications\Models\NotificationsToken;
 
 trait RecipientsDevices
 {

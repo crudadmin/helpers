@@ -1,6 +1,6 @@
 <?php
 
-namespace AdminHelpers\Contracts\Notifications\Providers;
+namespace AdminHelpers\Notifications\Providers;
 
 use Admin\Providers\AdminHelperServiceProvider;
 use Admin;
@@ -37,10 +37,10 @@ class NotificationsServiceProvider extends AdminHelperServiceProvider
             return;
         }
 
-        Admin::registerAdminModels(__dir__ . '/../Models/**', 'AdminHelpers\Contracts\Notifications\Models');
+        Admin::registerAdminModels(__dir__ . '/../Models/**', 'AdminHelpers\Notifications\Models');
 
         $this->commands([
-            \AdminHelpers\Contracts\Notifications\Commands\SendNotificationsCommand::class,
+            \AdminHelpers\Notifications\Commands\SendNotificationsCommand::class,
         ]);
     }
 }

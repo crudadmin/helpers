@@ -1,10 +1,10 @@
 <?php
 
-namespace AdminHelpers\Contracts\Notifications\Utilities;
+namespace AdminHelpers\Notifications\Utilities;
 
-use AdminHelpers\Contracts\Notifications\Models\NotificationsRecipient;
-use AdminHelpers\Contracts\Notifications\Models\NotificationsToken;
-use AdminHelpers\Contracts\Notifications\Utilities\RecipientsDevices;
+use AdminHelpers\Notifications\Models\NotificationsRecipient;
+use AdminHelpers\Notifications\Models\NotificationsToken;
+use AdminHelpers\Notifications\Utilities\RecipientsDevices;
 use Arr;
 use Exception;
 use Google\GuzzleClient;
