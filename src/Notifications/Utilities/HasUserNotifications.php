@@ -37,12 +37,17 @@ trait HasUserNotifications
             return;
         }
 
-        $this->notificationTokens()->create([
+        $data = [
             'access_token_id' => $accessTokenId,
-            'app' => $app ?: $this->defaultNotificationApp,
             'platform' => $platform ?: getPlatform(),
             'token' => $deviceId,
-        ]);
+        ];
+
+        if ( hasAppsSupport() ) {
+            $data['app'] = $app ?: $this->defaultNotificationApp;
+        }
+
+        $this->notificationTokens()->create($data);
     }
 
     public function getDefaultNotificationAppAttribute()
