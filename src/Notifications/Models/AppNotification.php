@@ -241,7 +241,7 @@ class AppNotification extends AdminModel
         return $text;
     }
 
-    private function getNotificationBindings()
+    public function getNotificationBindings()
     {
         return $this->data ?: [];
     }

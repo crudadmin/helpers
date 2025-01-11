@@ -99,11 +99,13 @@ trait RecipientsDevices
         $key = $app.':'.$table.':'.$id;
 
         if ( !array_key_exists($key, $tree) ) {
-            $tree[$key] = [
-                'table' => $table,
-                'row_id' => $id,
-                'app' => $app,
-            ];
+            $tree[$key] = array_merge(
+                hasAppsSupport() ? ['app' => $app] : [],
+                [
+                    'table' => $table,
+                    'row_id' => $id,
+                ]
+            );
         }
 
         $notification->recipientsKeys[] = $key;
