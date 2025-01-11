@@ -42,8 +42,12 @@ class NotificationsToken extends AdminModel
      */
     public function fields()
     {
+        $apps = config('admin_helpers.notifications.apps');
+
         return [
-            'app' => 'name:App|type:select|options:'.implode(',', config('admin_helpers.notifications.apps')).'|enum|required',
+            Group::fields([
+                'app' => 'name:Aplikácia|type:select|options:'.implode(',', $apps).'|default:'.($apps[0] ?? '').'|enum|required',
+            ])->if(hasAppsSupport()),
             'platform' => 'name:Platforma|type:select|options:'.implode(',', config('admin_helpers.notifications.platforms')).'|enum|required',
             'table' => 'name:Tabuľka|index:row_id|type:select|options:'.implode(',', getRecipientTables()).'|enum',
             'row_id' => 'name:Záznam|type:integer|max:0',

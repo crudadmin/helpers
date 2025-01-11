@@ -65,14 +65,16 @@ function createNotification($type, $data = [], $options = [])
 
         $notification->update($data);
     } else {
+        $app = hasAppsSupport() ? [ 'app' => $options['app'] ?? (config('admin_helpers.notifications.apps')[0] ?? null) ] : [];
+
         $notification = $model->create([
-            'app' => $options['app'] ?? (config('admin_helpers.notifications.apps')[0] ?? null),
             'code' => $code,
             'identifier' => $identifier,
             'data' => $payloadData,
             'notify_at' => $notifyAt,
             'created_at' => now(),
             ...$columns,
+            ...$app,
         ]);
     }
 }
@@ -87,4 +89,9 @@ function notificationsTokensTab()
     return Group::tab(NotificationsToken::class)->where(function($query, $parent){
         $query->where('table', $parent->getTable())->where('row_id', $parent->getKey());
     });
+}
+
+function hasAppsSupport()
+{
+    return count(config('admin_helpers.notifications.apps')) > 0;
 }

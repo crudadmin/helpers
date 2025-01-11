@@ -168,8 +168,8 @@ class NotificationManager
         return notificationModel()
                 ->selectRaw('
                     '.$table.'.id,
+                    '.(hasAppsSupport() ? $table.'.app,' : '').'
                     '.$table.'.data,
-                    '.$table.'.app,
                     '.$userColumns.',
                     '.$table.'.code
                 ')
