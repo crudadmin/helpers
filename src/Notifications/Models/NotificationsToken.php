@@ -47,7 +47,7 @@ class NotificationsToken extends AdminModel
         return [
             'app' => 'name:App|type:select|options:'.implode(',', config('admin_helpers.notifications.apps')).'|enum|required',
             'platform' => 'name:Platforma|type:select|options:'.implode(',', config('admin_helpers.notifications.platforms')).'|enum|required',
-            'table' => 'name:Tabuľka|index:row_id|type:select|options:'.implode(',', config('admin_helpers.notifications.recipients_tables')).'|enum',
+            'table' => 'name:Tabuľka|index:row_id|type:select|options:'.implode(',', getRecipientTables()).'|enum',
             'row_id' => 'name:Záznam|type:integer|max:0',
             'access_token_id' => 'name:Access token|type:integer|min:0|inaccessible',
             'token' => 'name:Token',

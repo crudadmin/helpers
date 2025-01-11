@@ -74,3 +74,8 @@ function createNotification($type, $data = [], $options = [])
         ]);
     }
 }
+
+function getRecipientTables()
+{
+    return array_filter(array_values(config('admin_helpers.notifications.relations')));
+}

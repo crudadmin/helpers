@@ -10,9 +10,10 @@ return [
 
         'platforms' => ['ios', 'android'],
 
-        'relations' => [],
-
-        'recipients_tables' => [],
+        //Pass table name only when table has device tokens assigned with relation
+        'relations' => [
+            // 'column_id' => 'table_name' //or null
+        ],
 
         //Send notification with delay, to wait for other notifications...
         'push_notifications_delay' => 0,

@@ -40,7 +40,7 @@ class NotificationsRecipient extends AdminModel
     {
         return [
             'notification_id' => 'name:Notifikacia|belongsTo:'.notificationModel()->getTable().'|required',
-            'table' => 'name:Tabuľka|index:row_id|type:select|options:'.implode(',', config('admin_helpers.notifications.recipients_tables')).'|enum',
+            'table' => 'name:Tabuľka|index:row_id|type:select|options:'.implode(',', getRecipientTables()).'|enum',
             'row_id' => 'name:Záznam|type:integer|max:0',
             'state' => 'name:Send state|type:select|options:sent,unsent,invalid,unknown,blocked,error|enum',
             'read_at' => 'name:Dátum prečitania|type:timestamp',

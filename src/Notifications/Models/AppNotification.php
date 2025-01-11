@@ -216,6 +216,11 @@ class AppNotification extends AdminModel
 
     private function addBindings($text)
     {
+        // Dont cast array
+        if ( is_string($text) === false ){
+            return $text;
+        }
+
         $data = $this->getNotificationBindings();
 
         $text = $text ?: '';
