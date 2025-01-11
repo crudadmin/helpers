@@ -3,6 +3,7 @@
 namespace AdminHelpers\Providers;
 
 use Admin;
+use AdminHelpers\Contracts\Notifications\Providers\NotificationsServiceProvider;
 use Admin\Providers\AdminHelperServiceProvider;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\Kernel;
@@ -12,6 +13,7 @@ class AppServiceProvider extends AdminHelperServiceProvider
     protected $providers = [
         ConfigServiceProvider::class,
         EventsServiceProvider::class,
+        NotificationsServiceProvider::class,
     ];
 
     protected $facades = [];
@@ -40,8 +42,6 @@ class AppServiceProvider extends AdminHelperServiceProvider
      */
     public function register()
     {
-        $this->registerFacades();
-
         $this->registerProviders();
 
         $this->bootRouteMiddleware();
@@ -56,6 +56,6 @@ class AppServiceProvider extends AdminHelperServiceProvider
 
     private function addPublishes()
     {
-        $this->publishes([__DIR__ . '/../Config/config.php' => config_path('adminhelpers.php') ], 'adminhelpers.config');
+        $this->publishes([__DIR__ . '/../Config/config.php' => config_path('admin_helpers.php') ], 'admin_helpers.config');
     }
 }

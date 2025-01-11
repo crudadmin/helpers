@@ -6,13 +6,6 @@ use Admin\Providers\AdminHelperServiceProvider;
 
 class ConfigServiceProvider extends AdminHelperServiceProvider
 {
-    private $packageConfigKey = 'AdminHelpers';
-
-    private function getPackageConfigPath()
-    {
-        return __DIR__.'/../Config/config.php';
-    }
-
     /**
      * Register any application services.
      *
@@ -20,9 +13,7 @@ class ConfigServiceProvider extends AdminHelperServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(
-            $this->getPackageConfigPath(), $this->packageConfigKey
-        );
+        $this->mergeConfigs(require __DIR__.'/../Config/config.php', 'admin_helpers', []);
     }
 
     /**
@@ -34,13 +25,5 @@ class ConfigServiceProvider extends AdminHelperServiceProvider
     {
         //Merge crudadmin configs
         $this->mergeAdminConfigs(require __DIR__.'/../Config/admin.php');
-
-        //Merge AdminHelpers configs
-        $this->mergeConfigs(
-            require $this->getPackageConfigPath(),
-            $this->packageConfigKey,
-            [],
-            [],
-        );
     }
 }
