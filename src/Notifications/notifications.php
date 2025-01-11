@@ -1,6 +1,8 @@
 <?php
 
+use AdminHelpers\Notifications\Models\NotificationsToken;
 use Admin\Eloquent\AdminModel;
+use Admin\Fields\Group;
 
 function notificationModel()
 {
@@ -77,5 +79,12 @@ function createNotification($type, $data = [], $options = [])
 
 function getRecipientTables()
 {
-    return array_filter(array_values(config('admin_helpers.notifications.relations')));
+    return array_values(array_filter(config('admin_helpers.notifications.relations')));
+}
+
+function notificationsTokensTab()
+{
+    return Group::tab(NotificationsToken::class)->where(function($query, $parent){
+        $query->where('table', $parent->getTable())->where('row_id', $parent->getKey());
+    });
 }

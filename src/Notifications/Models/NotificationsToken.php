@@ -18,8 +18,6 @@ class NotificationsToken extends AdminModel
      */
     protected $name = 'Notifikačné tokeny';
 
-    protected $active = false;
-
     protected $publishable = false;
 
     protected $sortable = false;
