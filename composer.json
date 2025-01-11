@@ -1,0 +1,30 @@
+{
+    "name": "crudadmin/helpers",
+    "type": "library",
+    "description": "Laravel set of helpers package for administration based on crudadmin system",
+    "keywords": ["eshop", "admin", "laravel"],
+    "homepage": "https://www.marekgogol.sk",
+    "license": "MIT",
+    "authors": [
+        { "name": "Marek Gogoľ", "email": "info@marekgogol.sk" }
+    ],
+    "require": {
+        "php": ">=8.3.0",
+        "crudadmin/crudadmin": "^4.0|^5.0|dev-master|dev-5.0-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "AdminHelpers\\": "src"
+        },
+        "files": [
+            "src/Helpers/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AdminHelpers\\Providers\\AppServiceProvider"
+            ]
+        }
+    }
+}
