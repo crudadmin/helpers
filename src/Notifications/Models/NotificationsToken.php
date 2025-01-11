@@ -36,11 +36,6 @@ class NotificationsToken extends AdminModel
 
     public $timestamps = false;
 
-    public function active()
-    {
-        return hasDebugFeature();
-    }
-
     /*
      * Automatic form and database generator by fields list (prettier-ignore)
      * :name - field name

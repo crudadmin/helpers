@@ -56,7 +56,7 @@ class AppNotification extends AdminModel
         $apps = config('admin_helpers.notifications.apps');
 
         return [
-            'app' => 'name:Aplikácia|type:select|options:'.implode(',', $apps).'|default:'.$apps[0].'|enum|required|inaccessible',
+            'app' => 'name:Aplikácia|type:select|options:'.implode(',', $apps).'|default:'.($apps[0] ?? '').'|enum|required|inaccessible',
             'code' => 'name:Typ notifikácie|type:select|option::name|max:5|index|required',
             'identifier' => 'name:Typ relácie|max:20|index|inaccessible',
             'data' => 'name:Data|type:json',
