@@ -42,5 +42,12 @@ class NotificationsServiceProvider extends AdminHelperServiceProvider
         $this->commands([
             \AdminHelpers\Notifications\Commands\SendNotificationsCommand::class,
         ]);
+
+        $this->app['config']->set('logging.channels.notification', [
+            'driver' => 'single',
+            'path' => storage_path('logs/notification.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ]);
     }
 }
