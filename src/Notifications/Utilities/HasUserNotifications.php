@@ -25,7 +25,7 @@ trait HasUserNotifications
 
         $accessTokenId = app()->runningInConsole()
                             ? null
-                            : client()->currentAccessToken()?->getKey();
+                            : client()?->currentAccessToken()?->getKey();
 
         // Do not add duplicite tokens
         if ( $token = $this->notificationTokens()->where('token', $deviceId)->first() ){
