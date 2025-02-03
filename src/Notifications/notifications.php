@@ -32,6 +32,11 @@ function createNotification($type, $data = [], $options = [])
 
     $code = $model->getByName($type)['code'] ?? 0;
 
+    // No notification should be created.
+    if ( $code == 0 ){
+        return;
+    }
+
     $identifier = getNotificationIdentifier($options['identifier'] ?? null);
 
     $payloadData = $options['data'] ?? $data;
