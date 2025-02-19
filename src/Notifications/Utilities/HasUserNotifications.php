@@ -41,6 +41,7 @@ trait HasUserNotifications
             'access_token_id' => $accessTokenId,
             'platform' => $platform ?: getPlatform(),
             'token' => $deviceId,
+            'debug' => isTestEnvironment() ? 1 : 0,
         ];
 
         if ( hasAppsSupport() ) {
