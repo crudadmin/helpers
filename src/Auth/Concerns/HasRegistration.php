@@ -54,7 +54,13 @@ trait HasRegistration
             event(new UserRegistered($model));
         }
 
-        return $this->loginResponse($model, 'register')->message(_('Tvoj profil bol úspešne dokončený!'));
+        return $this->loginResponse($model, 'register')
+                    ->message($this->getSuccessMessage());
+    }
+
+    public function getSuccessMessage()
+    {
+        return _('Boli ste úspešne registrovaní!');
     }
 
     protected function verifyRegistrationOtp($model, $destroyToken = true)
