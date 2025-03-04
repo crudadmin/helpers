@@ -10,6 +10,11 @@ trait HasUserAuth
     use HasPhoneFormat,
         HasApiTokens;
 
+    public function getGuard()
+    {
+        return auth()->guard($this->guard);
+    }
+
     public function scopeLoginBy($query, $email, $phone, $identifier, $rowId = null)
     {
         // When verificator row id is present, we want to find user by that row id.
@@ -60,11 +65,6 @@ trait HasUserAuth
         }
 
         return $data;
-    }
-
-    public function getAuthGuard()
-    {
-        return auth()->guard($this->guard);
     }
 
     public function addVerified($method)

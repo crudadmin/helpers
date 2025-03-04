@@ -6,7 +6,7 @@ trait HasResponse
 {
     protected function makeAuthResponse($user, $type = null)
     {
-        $user->getAuthGuard()->setUser($user);
+        $user->getGuard()->setUser($user);
 
         return $this->loginResponse($user, $type);
     }
