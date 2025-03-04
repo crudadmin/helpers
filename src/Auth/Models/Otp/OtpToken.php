@@ -1,10 +1,10 @@
 <?php
 
-namespace AdminHelpers\Auth\Models;
+namespace AdminHelpers\Auth\Models\Otp;
 
 use Admin\Eloquent\AdminModel;
 use Admin\Helpers\SmartSms;
-use App\Mail\ClientOTPMail;
+use App\Mail\ClientOTPMail; //Todo:
 use Mail;
 
 class OtpToken extends AdminModel
@@ -101,7 +101,7 @@ class OtpToken extends AdminModel
         return strtoupper(str_random($chars).str_pad($numbersGenerated, $numbers, '0'));
     }
 
-    public static function hashToken($token)
+    public function hashToken($token)
     {
         return hash('sha256', mb_strtoupper($token));
     }
@@ -115,7 +115,7 @@ class OtpToken extends AdminModel
         }, str_split($tokenString)));
 
         $this->fill([
-            'token' => self::hashToken($tokenString),
+            'token' => $this->hashToken($tokenString),
             'format' => $format,
             'created_at' => now(),
         ]);

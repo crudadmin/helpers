@@ -2,22 +2,18 @@
 
 namespace AdminHelpers\Auth\Concerns;
 
-use AdminHelpers\Auth\Concerns\HasVerificators;
 use Admin;
+use Admin\Eloquent\AdminModel;
+use AdminHelpers\Auth\Concerns\HasVerificators;
 
 trait HasOTPAuthorization
 {
     use HasVerificators;
 
-    public function getOtpModel()
-    {
-        return Admin::getModelBytable('otp_tokens');
-    }
-
     public function resend()
     {
         //Check if old OTP exists
-        $oldToken = $this->getOtpModel()
+        $oldToken = otpModel()
                         // Find by identifier
                         ->where('identifier', request('identifier', '-'))
                         // Find by exact OTP
@@ -59,5 +55,30 @@ trait HasOTPAuthorization
                 ? _('Použite testovací OTP token.')
                 : _('Zaslali sme Vám overovací kód.')
         );
+    }
+
+    protected function findToken($token, $identifier = null)
+    {
+        //Skip tokens on DEV
+        if ( isTestIdentifier($identifier, $token) ){
+            return otpModel()->forceFill([
+                'verificator' => $this->getVerificator(),
+                'token' => $token,
+                'identifier' => $identifier,
+            ]);
+        }
+
+        $isModel = is_object($identifier) && $identifier instanceof AdminModel;
+
+        $query = [
+            'token' => otpModel()->hashToken($token),
+        ] + ($isModel ? [
+            'table' => $identifier->getTable(),
+            'row_id' => $identifier->getKey(),
+        ] : [
+            'identifier' => $identifier,
+        ]);
+
+        return otpModel()->where($query)->where('valid_to', '>=', now())->first();
     }
 }

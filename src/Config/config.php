@@ -24,4 +24,10 @@ return [
 
         'whitelisted_tokens' => array_filter(explode(';', env('NOTIFICATIONS_TOKENS') ?: '')),
     ],
+
+    'auth' => [
+        'otp' => [
+            'enabled' => false,
+        ]
+    ]
 ];

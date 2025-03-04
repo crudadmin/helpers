@@ -4,6 +4,7 @@ namespace AdminHelpers\Providers;
 
 use Admin;
 use AdminHelpers\Notifications\Providers\NotificationsServiceProvider;
+use AdminHelpers\Auth\Providers\AuthServiceProvider;
 use Admin\Providers\AdminHelperServiceProvider;
 
 class AppServiceProvider extends AdminHelperServiceProvider
@@ -11,6 +12,7 @@ class AppServiceProvider extends AdminHelperServiceProvider
     protected $providers = [
         ConfigServiceProvider::class,
         NotificationsServiceProvider::class,
+        AuthServiceProvider::class,
     ];
 
     protected $facades = [];
