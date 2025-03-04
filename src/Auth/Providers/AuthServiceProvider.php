@@ -7,6 +7,12 @@ use Admin;
 
 class AuthServiceProvider extends AdminHelperServiceProvider
 {
+    protected $facades = [
+        'AdminAuth' => [
+            'facade' => \AdminHelpers\Auth\Facades\AdminAuth::class,
+            'class' => ['admin.auth', \AdminHelpers\Auth\Utilities\AdminAuth::class],
+        ],
+    ];
 
     /**
      * Register any application services.
@@ -15,6 +21,8 @@ class AuthServiceProvider extends AdminHelperServiceProvider
      */
     public function register()
     {
+        $this->registerFacades();
+
         require __DIR__.'/../auth.php';
     }
 

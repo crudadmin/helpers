@@ -28,9 +28,6 @@ class AppServiceProvider extends AdminHelperServiceProvider
     {
         $this->registerModels();
 
-        //Boot providers after this provider boot
-        $this->registerProviders([]);
-
         $this->commands([]);
     }
 
@@ -41,6 +38,8 @@ class AppServiceProvider extends AdminHelperServiceProvider
      */
     public function register()
     {
+        $this->registerFacades();
+
         $this->registerProviders();
 
         $this->bootRouteMiddleware();
