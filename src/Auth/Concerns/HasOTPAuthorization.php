@@ -18,8 +18,13 @@ trait HasOTPAuthorization
     {
         //Check if old OTP exists
         $oldToken = $this->getOtpModel()
+                        // Find by identifier
                         ->where('identifier', request('identifier', '-'))
-                        ->findOrFail(request('id'));
+                        // Find by exact OTP
+                        ->when(request('id'), function($query, $id){
+                            return $query->where($query->qualifyColumn('id'), $id);
+                        })
+                        ->firstOrFail();
 
         $token = $oldToken->replicateToken()->sendToken();
 
