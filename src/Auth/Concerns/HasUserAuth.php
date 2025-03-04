@@ -1,0 +1,88 @@
+<?php
+
+namespace AdminHelpers\Auth\Concerns;
+
+use AdminHelpers\Auth\Concerns\HasPhoneFormat;
+
+trait HasUserAuth
+{
+    use HasPhoneFormat;
+
+    public function scopeLoginBy($query, $email, $phone, $identifier, $rowId = null)
+    {
+        // When verificator row id is present, we want to find user by that row id.
+        if ( $rowId ) {
+            $query->where($this->qualifyColumn('id'), $rowId);
+        }
+
+        //Search by any
+        if ( $identifier ) {
+            $query->where(function($query) use ($identifier) {
+                $query->where('email', $identifier)
+                      ->orWhere('phone', $this->toPhoneFormat($identifier));
+            });
+        }
+
+        //Search by email
+        else if ( $email ){
+            $query->where('email', $email);
+        }
+
+        //Search by phone
+        else if ( $phone ) {
+            $query->where('phone', $this->toPhoneFormat($phone));
+        }
+
+        //Search by none
+        else {
+            $query->where('id', 0);
+        }
+    }
+
+    public function createLoginResponse($tokenType = false)
+    {
+        $data = [
+            'driver' => $this->getTable(),
+            'user' => $this->setUserResponse(),
+            'device_tokens' => $this->notificationTokens()->pluck('token'),
+        ];
+
+        //We does not want create token if false has been given
+        if ( $tokenType ) {
+            $token = $this->createToken($tokenType ?: 'default');
+
+            $data['token'] = [
+                'token' => $token->plainTextToken,
+                'expiration' => null,
+            ];
+        }
+
+        return $data;
+    }
+
+    public function getAuthGuard()
+    {
+        return auth()->guard($this->guard);
+    }
+
+    public function addVerified($method)
+    {
+        $verified = $this->verified?->toArray() ?: [];
+
+        if ( $method && in_array($method, $verified) == false ) {
+            $this->verified = array_merge($verified, [ $method ]);
+        }
+
+        return $this;
+    }
+
+    public function isVerified($method)
+    {
+        //If not verification method has been passed, and user exists. We can pass true.
+        if ( $this->exists && !$method ){
+            return true;
+        }
+
+        return in_array($method, $this->verified?->toArray() ?: []);
+    }
+}
