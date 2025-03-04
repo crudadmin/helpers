@@ -3,10 +3,12 @@
 namespace AdminHelpers\Auth\Concerns;
 
 use AdminHelpers\Auth\Concerns\HasPhoneFormat;
+use Laravel\Sanctum\HasApiTokens;
 
 trait HasUserAuth
 {
-    use HasPhoneFormat;
+    use HasPhoneFormat,
+        HasApiTokens;
 
     public function scopeLoginBy($query, $email, $phone, $identifier, $rowId = null)
     {
