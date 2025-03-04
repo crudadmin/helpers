@@ -3,8 +3,8 @@
 namespace AdminHelpers\Auth\Utilities;
 
 use Illuminate\Support\Facades\Route;
-use Admin\Controllers\Auth\LoginController;
 use AdminHelpers\Auth\Controllers\OTPController;
+use AdminHelpers\Auth\Controllers\LoginController;
 use AdminHelpers\Auth\Controllers\RegisterController;
 
 class AdminAuth
