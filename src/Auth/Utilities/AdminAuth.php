@@ -19,6 +19,11 @@ class AdminAuth
         });
     }
 
+    public function logout($controller = LoginController::class)
+    {
+        Route::any('auth/logout', [$controller, 'logout']);
+    }
+
     public function otp($controller = OTPController::class)
     {
         Route::middleware(['throttle:otp'])->group(function () use ($controller) {
