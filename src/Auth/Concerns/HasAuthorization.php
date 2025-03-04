@@ -3,9 +3,12 @@
 namespace AdminHelpers\Auth\Concerns;
 
 use Illuminate\Support\Facades\Hash;
+use AdminHelpers\Auth\Concerns\HasOTPAuthorization;
 
 trait HasAuthorization
 {
+    use HasOTPAuthorization;
+
     public function login()
     {
         $this->validate(request(), [

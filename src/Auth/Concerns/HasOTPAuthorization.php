@@ -2,14 +2,23 @@
 
 namespace AdminHelpers\Auth\Concerns;
 
-use AdminHelpers\Auth\Models\OtpToken;
+use AdminHelpers\Auth\Concerns\HasVerificators;
+use Admin;
 
 trait HasOTPAuthorization
 {
+    use HasVerificators;
+
+    public function getOtpModel()
+    {
+        return Admin::getModelBytable('otp_tokens');
+    }
+
     public function resend()
     {
         //Check if old OTP exists
-        $oldToken = OtpToken::where('identifier', request('identifier', '-'))
+        $oldToken = $this->getOtpModel()
+                        ->where('identifier', request('identifier', '-'))
                         ->findOrFail(request('id'));
 
         $token = $oldToken->replicateToken()->sendToken();
@@ -29,5 +38,21 @@ trait HasOTPAuthorization
         }
 
         return autoAjax()->success();
+    }
+
+    /**
+     * Returns response of successfuly sent token
+     *
+     * @return  AutoAjax
+     */
+    protected function tokenSendResponse($token)
+    {
+         return autoAjax()->store([
+            'otp' => $token->getTokenResponseArray(),
+        ])->message(
+            $token->isTestIdentifier()
+                ? _('Použite testovací OTP token.')
+                : _('Zaslali sme Vám overovací kód.')
+        );
     }
 }
