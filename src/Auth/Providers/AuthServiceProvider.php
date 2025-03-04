@@ -30,7 +30,7 @@ class AuthServiceProvider extends AdminHelperServiceProvider
         }
 
         $this->commands([
-            // \AdminHelpers\Notifications\Commands\SendNotificationsCommand::class,
+            \AdminHelpers\Auth\Commands\CleanOtpTokens::class,
         ]);
     }
 }
