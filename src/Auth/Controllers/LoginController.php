@@ -13,4 +13,10 @@ class LoginController extends Controller implements Authorizable
     {
         //TODO:
     }
+
+    public function loginResponse($user, $type = null)
+    {
+        //TODO:
+        return autoAjax();
+    }
 }

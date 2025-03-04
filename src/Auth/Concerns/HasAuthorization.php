@@ -5,11 +5,13 @@ namespace AdminHelpers\Auth\Concerns;
 use Illuminate\Support\Facades\Hash;
 use AdminHelpers\Auth\Concerns\HasAuthFields;
 use AdminHelpers\Auth\Concerns\HasOTPAuthorization;
+use AdminHelpers\Auth\Concerns\HasResponse;
 
 trait HasAuthorization
 {
     use HasAuthFields,
-        HasOTPAuthorization;
+        HasOTPAuthorization,
+        HasResponse;
 
     public function login()
     {
@@ -22,7 +24,7 @@ trait HasAuthorization
 
         //User authorized
         if ( $user && $user->password && Hash::check(request('password'), $user->password) ){
-            return $this->loginResponse($user);
+            return $this->makeAuthResponse($user);
         }
 
         return autoAjax()->error(_('Prihlasovacie údaje nie sú správne.'), 401);
@@ -63,7 +65,7 @@ trait HasAuthorization
 
         $token->forceDelete();
 
-        return $this->loginResponse($user);
+        return $this->makeAuthResponse($user);
     }
 
     public function loginBySocialiteToken($driverType)
@@ -76,7 +78,7 @@ trait HasAuthorization
                     $user->addVerified('email')->save();
                 }
 
-                return $this->loginResponse($user, 'social');
+                return $this->makeAuthResponse($user, 'social');
             })
             ->callbackResponse(request('token'));
     }

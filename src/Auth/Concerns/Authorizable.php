@@ -10,4 +10,6 @@ interface Authorizable
      * @return \Admin\Eloquent\AdminModel
      */
     public function getAuthModel();
+
+    public function loginResponse($user, $type = null);
 }

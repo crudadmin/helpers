@@ -6,10 +6,12 @@ use AutoAjax\AutoAjax;
 use Illuminate\Http\Response;
 use AdminHelpers\Auth\Events\UserRegistered;
 use AdminHelpers\Auth\Concerns\HasOTPAuthorization;
+use AdminHelpers\Auth\Concerns\HasResponse;
 
 trait HasRegistration
 {
-    use HasOTPAuthorization;
+    use HasOTPAuthorization,
+        HasResponse;
 
     public function registerOTP()
     {
@@ -54,7 +56,7 @@ trait HasRegistration
             event(new UserRegistered($model));
         }
 
-        return $this->loginResponse($model, 'register')
+        return $this->makeAuthResponse($model, 'register')
                     ->message($this->getSuccessMessage());
     }
 
