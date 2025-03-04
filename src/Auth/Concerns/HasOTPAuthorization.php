@@ -45,15 +45,20 @@ trait HasOTPAuthorization
      *
      * @return  AutoAjax
      */
-    protected function tokenSendResponse($token)
+    protected function tokenSendResponse($token, $verified = false)
     {
-         return autoAjax()->store([
-            'otp' => $token->getTokenResponseArray(),
-        ])->message(
-            $token->isTestIdentifier()
-                ? _('Použite testovací OTP token.')
-                : _('Zaslali sme Vám overovací kód.')
-        );
+        $response = autoAjax()->store([
+            'otp' => $token->getTokenResponseArray($verified),
+        ]);
+
+        // Show message during verification
+        if ( $verified === false ) {
+            $response->message(
+                $token->isTestIdentifier() ? _('Použite testovací OTP token.') : _('Zaslali sme Vám overovací kód.')
+            );
+        }
+
+        return $response;
     }
 
     protected function findToken($token, $identifier = null)
@@ -101,27 +106,5 @@ trait HasOTPAuthorization
         $token->save();
 
         return $token;
-    }
-
-    protected function verifyRegistrationOtp($model)
-    {
-        $verificator = request('verificator');
-
-        //If no verificator has been passed, but app requires verificator and user is not verified yet.
-        if ( !$verificator && $this->getVerificator() && $model->verified->count() == 0 ) {
-            return autoAjax()->error(_('Zopakujte prosím proces registrácie.'), 401)->throw();
-        }
-
-        //Uf user is logged in already and verification method is already verified as well, skip.
-        //Or user is not logged in. Thus is not verified.
-        elseif ( $verificator && $model->isVerified($verificator) == false ) {
-            if ( !($token = $this->findToken(request('token'), request($verificator))) ){
-                return autoAjax()->error(_('Prihlasovací kód nie je správny.'), 401)->throw();
-            }
-
-            $model->addVerified($token->verificator);
-        }
-
-        return isset($token) ? $token : null;
     }
 }
