@@ -4,14 +4,18 @@ namespace AdminHelpers\Auth\Concerns;
 
 use AutoAjax\AutoAjax;
 use Illuminate\Http\Response;
+use AdminHelpers\Auth\Events\UserRegistered;
+use AdminHelpers\Auth\Concerns\HasOTPAuthorization;
 
 trait HasRegistration
 {
+    use HasOTPAuthorization;
+
     public function registerOTP()
     {
         $model = $this->getAuthModel();
 
-        $data = $this->getValidatedData($model);
+        $data = $this->getValidatedOtpData($model);
 
         // If error response is present, throw it.
         if ( $data instanceof Response || $data instanceof AutoAjax ) {
@@ -31,6 +35,26 @@ trait HasRegistration
 
             return $this->tokenSendResponse($token);
         }
+    }
+
+    public function registerOTPVerifyRegister()
+    {
+        $model = $this->getAuthModel();
+
+        $isNewEntry = $model->exists === false;
+
+        $data = $this->getValidatedRegisterData($model);
+
+        // Verify registration OTP or logged state
+        $this->verifyRegistrationOtp($model);
+
+        $model = $this->createUser($model, $data, $isNewEntry);
+
+        if ( $isNewEntry ){
+            event(new UserRegistered($model));
+        }
+
+        return $this->loginResponse($model, 'register')->message(_('Tvoj profil bol úspešne dokončený!'));
     }
 
     protected function verifyRegistrationOtp($model, $destroyToken = true)
@@ -53,7 +77,7 @@ trait HasRegistration
         }
 
         // Delete token after verification
-        if ( $destroyToken ) {
+        if ( isset($token) && $destroyToken ) {
             $token->delete();
         }
 
