@@ -2,7 +2,6 @@
 
 namespace AdminHelpers\Auth\Concerns;
 
-use Admin;
 use Admin\Eloquent\AdminModel;
 use AdminHelpers\Auth\Concerns\HasVerificators;
 
@@ -80,5 +79,27 @@ trait HasOTPAuthorization
         ]);
 
         return otpModel()->where($query)->where('valid_to', '>=', now())->first();
+    }
+
+    public function createToken($identifier = null, $verificator, $durationMinutes = 15)
+    {
+        $validTo = now()->addMinutes($durationMinutes);
+
+        $isModel = is_object($identifier) && $identifier instanceof AdminModel;
+
+        $verificator = $verificator ?: $this->getVerificator();
+
+        $token = otpModel()->fill([
+                'table' => $isModel ? $identifier->getTable() : null,
+                'row_id' => $isModel ? $identifier->getKey() : null,
+                'verificator' => $verificator,
+                'identifier' => $isModel ? $identifier[$verificator] : $identifier,
+                'valid_to' => $validTo,
+            ])
+            ->generateNewToken();
+
+        $token->save();
+
+        return $token;
     }
 }
