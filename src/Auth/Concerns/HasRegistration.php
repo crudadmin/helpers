@@ -39,7 +39,7 @@ trait HasRegistration
         }
     }
 
-    public function registerOTPVerifyRegister()
+    public function registerOTPVerify()
     {
         $model = $this->getAuthModel();
 
