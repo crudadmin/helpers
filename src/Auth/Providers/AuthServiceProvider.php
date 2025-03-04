@@ -32,5 +32,7 @@ class AuthServiceProvider extends AdminHelperServiceProvider
         $this->commands([
             \AdminHelpers\Auth\Commands\CleanOtpTokens::class,
         ]);
+
+        $this->loadViewsFrom(__DIR__ . '/../Views', 'admin_helpers');
     }
 }

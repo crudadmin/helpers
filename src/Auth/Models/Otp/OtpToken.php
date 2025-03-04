@@ -2,10 +2,10 @@
 
 namespace AdminHelpers\Auth\Models\Otp;
 
-use Admin\Eloquent\AdminModel;
-use Admin\Helpers\SmartSms;
-use App\Mail\ClientOTPMail; //Todo:
 use Mail;
+use Admin\Helpers\SmartSms;
+use Admin\Eloquent\AdminModel;
+use AdminHelpers\Auth\Mail\OTPMail;
 
 class OtpToken extends AdminModel
 {
@@ -136,7 +136,7 @@ class OtpToken extends AdminModel
     public function sendToken()
     {
         //Do not send test identifier
-        if ( $this->isTestIdentifier() ){
+        if ( $this->isTestIdentifier() || !$this->identifier ){
             return $this;
         }
 
@@ -144,7 +144,7 @@ class OtpToken extends AdminModel
 
         if ( $this->verificator == 'email' ) {
             Mail::to($this->identifier)->send(
-                new ClientOTPMail($token)
+                new OTPMail($token)
             );
         } else if ( $this->verificator == 'phone' ) {
             (new SmartSms)->sendSMS(

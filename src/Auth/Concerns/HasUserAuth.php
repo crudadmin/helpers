@@ -22,7 +22,7 @@ trait HasUserAuth
         $identifier = request('identifier');
         $rowId = request('row_id');
 
-        return $query->loginBy($email, $phone, $identifier, $rowId)->first();
+        return $query->loginBy($email, $phone, $identifier, $rowId);
     }
 
     public function scopeLoginBy($query, $email, $phone, $identifier, $rowId = null)
@@ -35,24 +35,24 @@ trait HasUserAuth
         //Search by any
         if ( $identifier ) {
             $query->where(function($query) use ($identifier) {
-                $query->where('email', $identifier)
-                      ->orWhere('phone', $this->toPhoneFormat($identifier));
+                $query->where($query->qualifyColumn('email'), $identifier)
+                      ->orWhere($query->qualifyColumn('phone'), $this->toPhoneFormat($identifier));
             });
         }
 
         //Search by email
         else if ( $email ){
-            $query->where('email', $email);
+            $query->where($query->qualifyColumn('email'), $email);
         }
 
         //Search by phone
         else if ( $phone ) {
-            $query->where('phone', $this->toPhoneFormat($phone));
+            $query->where($query->qualifyColumn('phone'), $this->toPhoneFormat($phone));
         }
 
         //Search by none
         else {
-            $query->where('id', 0);
+            $query->where($query->qualifyColumn('id'), 0);
         }
     }
 
