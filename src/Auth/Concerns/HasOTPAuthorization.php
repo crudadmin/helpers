@@ -81,7 +81,7 @@ trait HasOTPAuthorization
         return otpModel()->where($query)->where('valid_to', '>=', now())->first();
     }
 
-    public function createToken($identifier = null, $verificator, $durationMinutes = 15)
+    protected function createToken($identifier = null, $verificator, $durationMinutes = 15)
     {
         $validTo = now()->addMinutes($durationMinutes);
 
@@ -101,5 +101,27 @@ trait HasOTPAuthorization
         $token->save();
 
         return $token;
+    }
+
+    protected function verifyRegistrationOtp($model)
+    {
+        $verificator = request('verificator');
+
+        //If no verificator has been passed, but app requires verificator and user is not verified yet.
+        if ( !$verificator && $this->getVerificator() && $model->verified->count() == 0 ) {
+            return autoAjax()->error(_('Zopakujte prosím proces registrácie.'), 401)->throw();
+        }
+
+        //Uf user is logged in already and verification method is already verified as well, skip.
+        //Or user is not logged in. Thus is not verified.
+        elseif ( $verificator && $model->isVerified($verificator) == false ) {
+            if ( !($token = $this->findToken(request('token'), request($verificator))) ){
+                return autoAjax()->error(_('Prihlasovací kód nie je správny.'), 401)->throw();
+            }
+
+            $model->addVerified($token->verificator);
+        }
+
+        return isset($token) ? $token : null;
     }
 }
