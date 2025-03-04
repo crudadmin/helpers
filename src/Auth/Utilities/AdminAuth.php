@@ -29,7 +29,7 @@ class AdminAuth
 
     public function register($controller = RegisterController::class)
     {
-        Route::middleware(['throttle:auth'])->group(function () use ($controller) {
+        Route::middleware(['throttle:otp'])->group(function () use ($controller) {
             Route::post('auth/register/otp', [$controller, 'registerOTP']);
             Route::post('auth/register/otp-verify', [$controller, 'registerOTPVerify']);
         });
