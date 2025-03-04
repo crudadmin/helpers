@@ -15,6 +15,16 @@ trait HasUserAuth
         return auth()->guard($this->guard);
     }
 
+    public function scopeFindFromRequest($query)
+    {
+        $email = request('email');
+        $phone = request('phone');
+        $identifier = request('identifier');
+        $rowId = request('row_id');
+
+        return $query->loginBy($email, $phone, $identifier, $rowId)->first();
+    }
+
     public function scopeLoginBy($query, $email, $phone, $identifier, $rowId = null)
     {
         // When verificator row id is present, we want to find user by that row id.
