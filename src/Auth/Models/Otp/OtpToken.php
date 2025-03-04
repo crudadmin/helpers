@@ -62,10 +62,18 @@ class OtpToken extends AdminModel
         ]);
     }
 
-    public function getTokenResponseArray()
+    /**
+     * Returns array of token response
+     *
+     * @param bool $verified - In some cases, we may want to return verified token response.
+     *
+     * @return array
+     */
+    public function getTokenResponseArray($verified = false)
     {
         return $this->setTokenResponse() + [
             'token' => $this->getUnecryptedToken(),
+            'verified' => $verified,
         ];
     }
 
