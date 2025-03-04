@@ -3,7 +3,6 @@
 namespace AdminHelpers\Notifications\Utilities;
 
 use AdminHelpers\Notifications\Models\NotificationsToken;
-use AdminHelpers\Notifications\Utilities\HasUserNotifications;
 
 trait HasUserNotifications
 {

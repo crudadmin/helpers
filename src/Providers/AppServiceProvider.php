@@ -5,8 +5,6 @@ namespace AdminHelpers\Providers;
 use Admin;
 use AdminHelpers\Notifications\Providers\NotificationsServiceProvider;
 use Admin\Providers\AdminHelperServiceProvider;
-use Carbon\Carbon;
-use Illuminate\Foundation\Http\Kernel;
 
 class AppServiceProvider extends AdminHelperServiceProvider
 {
