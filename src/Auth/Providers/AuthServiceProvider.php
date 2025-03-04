@@ -2,8 +2,11 @@
 
 namespace AdminHelpers\Auth\Providers;
 
-use Admin\Providers\AdminHelperServiceProvider;
 use Admin;
+use Illuminate\Http\Request;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+use Admin\Providers\AdminHelperServiceProvider;
 
 class AuthServiceProvider extends AdminHelperServiceProvider
 {
@@ -42,5 +45,11 @@ class AuthServiceProvider extends AdminHelperServiceProvider
         ]);
 
         $this->loadViewsFrom(__DIR__ . '/../Views', 'admin_helpers');
+
+        RateLimiter::for('otp', function (Request $request) {
+            return [
+                Limit::perMinute(15)->by(($request->user()?->id ?: $request->ip()).'_'.$request->getRequestUri()),
+            ];
+        });
     }
 }
