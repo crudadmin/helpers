@@ -52,7 +52,7 @@ class WhitelistedToken extends AdminModel
     public function fields()
     {
         return [
-            'identifier' => 'name:Email/Tel. číslo|required',
+            'identifier' => 'name:Email / Tel. číslo|required',
         ];
     }
 
