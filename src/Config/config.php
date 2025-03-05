@@ -33,6 +33,7 @@ return [
 
         'otp' => [
             'enabled' => false,
+            'debug' => env('TOKEN_DEBUG', false),
 
             //Verification test numbers
             'test_identifiers' => [

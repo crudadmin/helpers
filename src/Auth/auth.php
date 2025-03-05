@@ -20,7 +20,7 @@ if ( !function_exists('isTokenDebug') ) {
      */
     function isTokenDebug()
     {
-        return app()->hasDebugModeEnabled() && isTestEnvironment() && env('TOKEN_DEBUG', false) === true;
+        return app()->hasDebugModeEnabled() && isTestEnvironment() && config('admin_helpers.auth.otp.debug', false) === true;
     }
 }
 
