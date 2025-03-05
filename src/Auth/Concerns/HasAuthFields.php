@@ -79,6 +79,8 @@ trait HasAuthFields
             $query = $query::query();
         }
 
+        $model = $query->getModel();
+
         // When verificator row id is present, we want to find user by that row id.
         if ( $rowId ) {
             $query->where($this->qualifyColumn('id'), $rowId);
@@ -86,19 +88,24 @@ trait HasAuthFields
 
         //Search by any
         if ( $identifier ) {
-            $query->where(function($query) use ($identifier) {
-                $query->where($query->qualifyColumn('email'), $identifier)
-                      ->orWhere($query->qualifyColumn('phone'), $this->toPhoneFormat($identifier));
+            $query->where(function($query) use ($identifier, $model) {
+                if ( $model->getField('email') ) {
+                    $query->where($query->qualifyColumn('email'), $identifier);
+                }
+
+                if ( $model->getField('phone') ) {
+                    $query->orWhere($query->qualifyColumn('phone'), $this->toPhoneFormat($identifier));
+                }
             });
         }
 
         //Search by email
-        else if ( $email ){
+        else if ( $email && $model->getField('email') ){
             $query->where($query->qualifyColumn('email'), $email);
         }
 
         //Search by phone
-        else if ( $phone ) {
+        else if ( $phone && $model->getField('phone') ) {
             $query->where($query->qualifyColumn('phone'), $this->toPhoneFormat($phone));
         }
 
