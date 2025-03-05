@@ -45,6 +45,8 @@ class AppServiceProvider extends AdminHelperServiceProvider
         $this->bootRouteMiddleware();
 
         $this->addPublishes();
+
+        require_once __DIR__ . '/../Utilities/helpers.php';
     }
 
     private function registerModels()
