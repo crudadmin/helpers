@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use AdminHelpers\Auth\Concerns\HasAuthFields;
 use AdminHelpers\Auth\Concerns\HasOTPAuthorization;
 use AdminHelpers\Auth\Concerns\HasResponse;
+use Admin;
 
 trait HasAuthorization
 {
@@ -13,6 +14,21 @@ trait HasAuthorization
         HasOTPAuthorization,
         HasResponse;
 
+    /**
+     * Returns the auth model into which we are logging ing
+     *
+     * @return void
+     */
+    public function getAuthModel()
+    {
+        return $this->findUserFromRequest(Admin::getAuthModel());
+    }
+
+    /**
+     * Run login authorization process by username and password
+     *
+     * @return void
+     */
     public function login()
     {
         $this->validate(request(), [
@@ -30,6 +46,11 @@ trait HasAuthorization
         return autoAjax()->error(_('Prihlasovacie údaje nie sú správne.'), 401);
     }
 
+    /**
+     * Run login authorization OTP request
+     *
+     * @return void
+     */
     public function loginOTP()
     {
         $this->validate(request(), $this->getAuthFields());
@@ -46,6 +67,11 @@ trait HasAuthorization
         return $this->tokenSendResponse($token);
     }
 
+    /**
+     * Verify authorization OTP request and log in if successful
+     *
+     * @return void
+     */
     public function loginOTPVerify()
     {
         $this->validate(request(), [
@@ -68,6 +94,12 @@ trait HasAuthorization
         return $this->makeAuthResponse($user);
     }
 
+    /**
+     * Run login authorization by socialite token
+     *
+     * @param string $driverType
+     * @return void
+     */
     public function loginBySocialiteToken($driverType)
     {
         return (new \Admin\Socialite\SocialAuth($driverType))
@@ -83,6 +115,11 @@ trait HasAuthorization
             ->callbackResponse(request('token'));
     }
 
+    /**
+     * Run logout process
+     *
+     * @return void
+     */
     public function logout()
     {
         $user = client();

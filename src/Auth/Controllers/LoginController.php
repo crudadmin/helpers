@@ -9,11 +9,6 @@ class LoginController extends Controller implements Authorizable
 {
     use HasAuthorization;
 
-    public function getAuthModel()
-    {
-        //TODO:
-    }
-
     public function loginResponse($user, $type = null)
     {
         //TODO:
