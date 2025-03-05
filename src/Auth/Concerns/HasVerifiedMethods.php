@@ -2,7 +2,7 @@
 
 namespace AdminHelpers\Auth\Concerns;
 
-trait HasUserVerificator
+trait HasVerifiedMethods
 {
     /**
      * Add login method as verified, eg. email, phone, etc.
