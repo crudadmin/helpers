@@ -46,9 +46,20 @@ class AuthServiceProvider extends AdminHelperServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../Views', 'admin_helpers');
 
+        $this->setThrottleLimiters();
+    }
+
+    private function setThrottleLimiters()
+    {
         RateLimiter::for('otp', function (Request $request) {
             return [
-                Limit::perMinute(15)->by(($request->user()?->id ?: $request->ip()).'_'.$request->getRequestUri()),
+                Limit::perMinute(config('admin_helpers.auth.throttle.otp'))->by(($request->user()?->id ?: $request->ip()).'_'.$request->getRequestUri()),
+            ];
+        });
+
+        RateLimiter::for('auth', function (Request $request) {
+            return [
+                Limit::perMinute(config('admin_helpers.auth.throttle.auth'))->by(($request->user()?->id ?: $request->ip()).'_'.$request->getRequestUri()),
             ];
         });
     }

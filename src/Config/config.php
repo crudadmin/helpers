@@ -26,6 +26,11 @@ return [
     ],
 
     'auth' => [
+        'throttle' => [
+            'auth' => 15,
+            'otp' => 5,
+        ],
+
         'otp' => [
             'enabled' => false,
         ]
