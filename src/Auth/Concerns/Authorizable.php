@@ -11,5 +11,13 @@ interface Authorizable
      */
     public function getAuthModel();
 
-    public function loginResponse($user, $type = null);
+    /**
+     * Returns the success response
+     *
+     * @param  mixed $user
+     * @param  string $type
+     *
+     * @return mixed
+     */
+    public function authorizedResponse($user, $type = null);
 }

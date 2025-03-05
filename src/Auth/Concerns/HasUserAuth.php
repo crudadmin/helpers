@@ -13,27 +13,6 @@ trait HasUserAuth
         return auth()->guard($this->guard);
     }
 
-    public function createLoginResponse($tokenType = false)
-    {
-        $data = [
-            'driver' => $this->getTable(),
-            'user' => $this->setUserResponse(),
-            'device_tokens' => $this->notificationTokens()->pluck('token'),
-        ];
-
-        //We does not want create token if false has been given
-        if ( $tokenType ) {
-            $token = $this->createToken($tokenType ?: 'default');
-
-            $data['token'] = [
-                'token' => $token->plainTextToken,
-                'expiration' => null,
-            ];
-        }
-
-        return $data;
-    }
-
     public function addVerified($method)
     {
         $verified = $this->verified?->toArray() ?: [];

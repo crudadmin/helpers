@@ -2,11 +2,11 @@
 
 namespace AdminHelpers\Auth\Concerns;
 
+use Admin;
 use Illuminate\Support\Facades\Hash;
+use AdminHelpers\Auth\Concerns\HasResponse;
 use AdminHelpers\Auth\Concerns\HasAuthFields;
 use AdminHelpers\Auth\Concerns\HasOTPAuthorization;
-use AdminHelpers\Auth\Concerns\HasResponse;
-use Admin;
 
 trait HasAuthorization
 {
@@ -15,9 +15,9 @@ trait HasAuthorization
         HasResponse;
 
     /**
-     * Returns the auth model into which we are logging ing
+     * Returns the auth model into which we are logging in
      *
-     * @return void
+     * @return AdminModel|null
      */
     public function getAuthModel()
     {

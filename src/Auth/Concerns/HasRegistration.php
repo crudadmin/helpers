@@ -2,17 +2,45 @@
 
 namespace AdminHelpers\Auth\Concerns;
 
+use Admin;
 use AutoAjax\AutoAjax;
 use Illuminate\Http\Response;
+use AdminHelpers\Auth\Concerns\HasResponse;
 use AdminHelpers\Auth\Events\UserRegistered;
 use AdminHelpers\Auth\Concerns\HasOTPAuthorization;
-use AdminHelpers\Auth\Concerns\HasResponse;
 
 trait HasRegistration
 {
     use HasOTPAuthorization,
         HasResponse;
 
+    /**
+     * Returns the auth model into which we are logging in
+     *
+     * @return AdminModel|null
+     */
+    public function getAuthModel()
+    {
+        //Get logged user in case of incomplete registration via Google/Apple socials.
+        //Or new user.
+        return client() ?: Admin::getModelByTable($this->table);
+    }
+
+    /**
+     * Returns the success message
+     *
+     * @return string
+     */
+    public function getSuccessMessage()
+    {
+        return _('Boli ste úspešne registrovaní!');
+    }
+
+    /**
+     * Run registration with OTP request process first
+     *
+     * @return void
+     */
     public function registerOTP()
     {
         $model = $this->getAuthModel();
@@ -39,6 +67,11 @@ trait HasRegistration
         }
     }
 
+    /**
+     * Validate registration with existing OTP in request
+     *
+     * @return void
+     */
     public function registerOTPVerify()
     {
         $model = $this->getAuthModel();
@@ -60,11 +93,14 @@ trait HasRegistration
                     ->message($this->getSuccessMessage());
     }
 
-    public function getSuccessMessage()
-    {
-        return _('Boli ste úspešne registrovaní!');
-    }
-
+    /**
+     * Check if given OTP in request is valid
+     *
+     * @param  mixed $model
+     * @param  mixed $destroyToken
+     *
+     * @return OtpToken|null
+     */
     protected function verifyRegistrationOtp($model, $destroyToken = true)
     {
         $verificator = request('verificator');

@@ -8,10 +8,4 @@ use AdminHelpers\Auth\Concerns\HasAuthorization;
 class LoginController extends Controller implements Authorizable
 {
     use HasAuthorization;
-
-    public function loginResponse($user, $type = null)
-    {
-        //TODO:
-        return autoAjax();
-    }
 }
