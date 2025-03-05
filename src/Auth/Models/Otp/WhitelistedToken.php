@@ -2,9 +2,9 @@
 
 namespace AdminHelpers\Auth\Models\Otp;
 
-use Admin\Eloquent\AdminModel;
-use Admin\Fields\Group;
 use Admin;
+use Admin\Eloquent\AdminModel;
+use AdminHelpers\Auth\Rules\OnWhitelistedTokenCreated;
 
 class WhitelistedToken extends AdminModel
 {
@@ -39,8 +39,8 @@ class WhitelistedToken extends AdminModel
 
     protected $publishable = false;
 
-    protected $settings = [
-        'columns.active_till.name' => 'Aktívny do',
+    protected $rules = [
+        OnWhitelistedTokenCreated::class,
     ];
 
     /*
@@ -53,14 +53,8 @@ class WhitelistedToken extends AdminModel
     {
         return [
             'identifier' => 'name:Email / Tel. číslo|required',
+            'valid_to' => 'name:Platné do|type:timestamp|title:Pri prázdnej hodnote bude platné do '.(self::MINUTES_ACTIVE).' minút',
         ];
-    }
-
-    public function setAdminRowsResponse()
-    {
-        $this->append([
-            'active_till',
-        ])->makeVisible(['active_till']);
     }
 
     public static function getParsedIdentifiers()
@@ -74,22 +68,17 @@ class WhitelistedToken extends AdminModel
 
     public function scopeOnlyActive($query)
     {
-        $query->where('created_at', '>=', now()->subMinutes(self::MINUTES_ACTIVE));
+        $query->where('valid_to', '>=', now());
     }
 
     public function scopeUnactive($query)
     {
-        $query->where('created_at', '<', now()->subMinutes(self::MINUTES_ACTIVE));
+        $query->where('valid_to', '<', now());
     }
 
     public function getIsActiveAttribute()
     {
-        return $this->created_at >= now()->subMinutes(self::MINUTES_ACTIVE);
-    }
-
-    public function getActiveTillAttribute()
-    {
-        return $this->created_at->addMinutes(self::MINUTES_ACTIVE)->format('d.m.Y H:i');
+        return $this->valid_to >= now();
     }
 
     public function getFilterStates()
