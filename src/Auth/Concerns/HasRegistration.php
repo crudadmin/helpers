@@ -7,11 +7,13 @@ use AutoAjax\AutoAjax;
 use Illuminate\Http\Response;
 use AdminHelpers\Auth\Concerns\HasResponse;
 use AdminHelpers\Auth\Events\UserRegistered;
+use AdminHelpers\Auth\Concerns\HasAuthFields;
 use AdminHelpers\Auth\Concerns\HasOTPAuthorization;
 
 trait HasRegistration
 {
-    use HasOTPAuthorization,
+    use HasAuthFields,
+        HasOTPAuthorization,
         HasResponse;
 
     /**

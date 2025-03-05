@@ -4,7 +4,6 @@ namespace AdminHelpers\Auth\Controllers;
 
 use AdminHelpers\Auth\Concerns\Authorizable;
 use AdminHelpers\Auth\Concerns\HasRegistration;
-use Admin;
 
 class RegisterController extends Controller implements Authorizable
 {
