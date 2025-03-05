@@ -31,6 +31,19 @@ trait HasAuthFields
     }
 
     /**
+     * Find user by available authorization fields which their casts
+     *
+     * @return array
+     */
+    public function getRequestCasts()
+    {
+        return [
+            'email' => fn($value) => $value,
+            'phone' => fn($value) => $this->toPhoneFormat($value),
+        ];
+    }
+
+    /**
      * findUserFromRequest
      *
      * @param  mixed $query
@@ -40,12 +53,11 @@ trait HasAuthFields
     {
         $query = $this->getAuthQuery($query);
 
-        $email = request('email');
-        $phone = request('phone');
-        $identifier = request('identifier');
-        $rowId = request('row_id');
+        $availableFields = array_unique(array_merge(['identifier', 'row_id'], array_keys($this->getAuthFields())));
 
-        $query = $this->findUserByAuthFields($query, $email, $phone, $identifier, $rowId);
+        $params = request()->only($availableFields);
+
+        $query = $this->findUserByAuthFields($query, $params);
 
         return $query->first();
     }
@@ -72,7 +84,7 @@ trait HasAuthFields
      *
      * @return Builder
      */
-    private function findUserByAuthFields($query, $email, $phone, $identifier, $rowId = null)
+    private function findUserByAuthFields($query, $params)
     {
         // Fix query instance if model has been given. (redudancy check to avoid wrong result)
         if ( $query instanceof AdminModel ) {
@@ -82,37 +94,38 @@ trait HasAuthFields
         $model = $query->getModel();
 
         // When verificator row id is present, we want to find user by that row id.
-        if ( $rowId ) {
+        if ( $rowId = ($params['row_id'] ?? null) ) {
             $query->where($this->qualifyColumn('id'), $rowId);
         }
 
-        //Search by any
-        if ( $identifier ) {
-            $query->where(function($query) use ($identifier, $model) {
-                if ( $model->getField('email') ) {
-                    $query->where($query->qualifyColumn('email'), $identifier);
-                }
+        // Only present keys in model.
+        $searchBy = array_filter($this->getRequestCasts(), function($key) use ($model) {
+            return $model->getField($key);
+        }, ARRAY_FILTER_USE_KEY);
 
-                if ( $model->getField('phone') ) {
-                    $query->orWhere($query->qualifyColumn('phone'), $this->toPhoneFormat($identifier));
+        //Search by any fields defined in $searchBy array dynamically
+        if ( ($identifier = ($params['identifier'] ?? null)) && count($searchBy) > 0 ) {
+            $query->where(function($query) use ($searchBy, $identifier) {
+                // Find by dynamically defined fields
+                foreach ( $searchBy as $key => $callback ) {
+                    $query->orWhere($query->qualifyColumn($key), $callback($identifier));
                 }
             });
         }
 
-        //Search by email
-        else if ( $email && $model->getField('email') ){
-            $query->where($query->qualifyColumn('email'), $email);
-        }
-
-        //Search by phone
-        else if ( $phone && $model->getField('phone') ) {
-            $query->where($query->qualifyColumn('phone'), $this->toPhoneFormat($phone));
-        }
-
-        //Search by none
         else {
+            foreach ( $searchBy as $key => $callback ) {
+                if ( ($value = $params[$key] ?? null) ) {
+                    $query->where($query->qualifyColumn($key), $callback($value));
+
+                    return $query;
+                }
+            }
+
+            //Search by none, if no valid params has been passed into request.
             $query->where($query->qualifyColumn('id'), 0);
         }
+
 
         return $query;
     }
