@@ -107,3 +107,4 @@ class AdminAuth
             $callback();
         });
     }
+}
