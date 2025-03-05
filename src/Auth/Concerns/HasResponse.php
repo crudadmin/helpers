@@ -14,7 +14,7 @@ trait HasResponse
      *
      * @return mixed
      */
-    protected function makeAuthResponse($user, $type = null)
+    protected function makeAuthResponse($user, $type = 'login')
     {
         $user->getGuard()->setUser($user);
 
