@@ -33,6 +33,15 @@ return [
 
         'otp' => [
             'enabled' => false,
+
+            //Verification test numbers
+            'test_identifiers' => [
+                // '+421900000000',
+            ],
+
+            'whitelisted_tokens' => [
+                // 12345
+            ],
         ]
     ]
 ];
