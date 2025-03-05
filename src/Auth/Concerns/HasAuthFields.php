@@ -91,42 +91,73 @@ trait HasAuthFields
             $query = $query::query();
         }
 
-        $model = $query->getModel();
-
         // When verificator row id is present, we want to find user by that row id.
         if ( $rowId = ($params['row_id'] ?? null) ) {
             $query->where($this->qualifyColumn('id'), $rowId);
         }
 
-        // Only present keys in model.
-        $searchBy = array_filter($this->getRequestCasts(), function($key) use ($model) {
-            return $model->getField($key);
-        }, ARRAY_FILTER_USE_KEY);
-
         //Search by any fields defined in $searchBy array dynamically
-        if ( ($identifier = ($params['identifier'] ?? null)) && count($searchBy) > 0 ) {
-            $query->where(function($query) use ($searchBy, $identifier) {
-                // Find by dynamically defined fields
-                foreach ( $searchBy as $key => $callback ) {
-                    $query->orWhere($query->qualifyColumn($key), $callback($identifier));
-                }
-            });
+        if ( ($identifier = ($params['identifier'] ?? null)) && count($this->getModelCasts($query)) > 0 ) {
+            $this->findUserByIdentifier($query, $identifier);
         }
 
         else {
-            foreach ( $searchBy as $key => $callback ) {
-                if ( ($value = $params[$key] ?? null) ) {
-                    $query->where($query->qualifyColumn($key), $callback($value));
-
-                    return $query;
-                }
-            }
-
-            //Search by none, if no valid params has been passed into request.
-            $query->where($query->qualifyColumn('id'), 0);
+            $this->findUserByParams($query, $params);
         }
 
 
         return $query;
+    }
+
+    /**
+     * Find user by identifier
+     *
+     * @param  mixed $query
+     * @param  string $identifier
+     *
+     * @return void
+     */
+    private function findUserByIdentifier($query, $identifier)
+    {
+        $query->where(function($query) use ($identifier) {
+            // Find by dynamically defined fields
+            foreach ( $this->getModelCasts($query) as $key => $callback ) {
+                $query->orWhere($query->qualifyColumn($key), $callback($identifier));
+            }
+        });
+    }
+
+    /**
+     * findUserByParams
+     *
+     * @param  mixed $query
+     * @param  mixed $params
+     * @return void
+     */
+    private function findUserByParams($query, $params)
+    {
+        foreach ( $this->getModelCasts($query) as $key => $callback ) {
+            if ( ($value = $params[$key] ?? null) ) {
+                $query->where($query->qualifyColumn($key), $callback($value));
+
+                return $query;
+            }
+        }
+
+        //Search by none, if no valid params has been passed into request.
+        $query->where($query->qualifyColumn('id'), 0);
+    }
+
+    /**
+     * getModelCasts
+     *
+     * @return array
+     */
+    private function getModelCasts($query)
+    {
+        $model = $query->getModel();
+        return array_filter($this->getRequestCasts(), function($key) use ($model) {
+            return $model->getField($key);
+        }, ARRAY_FILTER_USE_KEY);
     }
 }
