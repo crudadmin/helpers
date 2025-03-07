@@ -93,7 +93,7 @@ trait HasAuthFields
 
         // When verificator row id is present, we want to find user by that row id.
         if ( $rowId = ($params['row_id'] ?? null) ) {
-            $query->where($this->qualifyColumn('id'), $rowId);
+            $query->where($query->qualifyColumn('id'), $rowId);
         }
 
         //Search by any fields defined in $searchBy array dynamically
