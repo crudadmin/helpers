@@ -199,6 +199,7 @@ class NotificationManager
                 'body' => $notification->pushMessage,
                 'image' => $notification->pushImage,
                 'data' => ($notification->data ?: []) + [
+                    'id' => $notification->getKey(),
                     'type' => $notification->type,
                 ],
             ];
