@@ -144,6 +144,8 @@ class BootstrapRequest
      */
     public function only($parts, $passKey = true)
     {
+        $parts = array_wrap($parts);
+
         if ( count($parts) == 0 ){
             return $this->all();
         }
