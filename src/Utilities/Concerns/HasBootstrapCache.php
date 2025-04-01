@@ -36,8 +36,10 @@ trait HasBootstrapCache
     {
         if ( isset($this->cache()[$method]) ) {
             $response = $this->cacheState($method, function () use ($method, $params) {
-                return $this->{$method}($params);
+                return json_encode($this->{$method}($params));
             });
+
+            return json_decode($response, true);
         } else {
             $response = $this->{$method}($params);
         }
