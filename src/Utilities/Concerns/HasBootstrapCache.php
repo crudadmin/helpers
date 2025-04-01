@@ -56,7 +56,7 @@ trait HasBootstrapCache
      */
     private function cacheState($method, $callback)
     {
-        $parts = [class_basename($this), $method];
+        $parts = [class_basename($this), app()->getLocale(), $method];
 
         $cache = $this->cache()[$method] ?? [];
 
