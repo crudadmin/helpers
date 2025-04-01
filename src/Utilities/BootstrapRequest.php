@@ -3,9 +3,12 @@
 namespace AdminHelpers\Utilities;
 
 use AdminHelpers\Auth\Utilities\AuthResponse;
+use AdminHelpers\Utilities\Concerns\HasBootstrapCache;
 
 class BootstrapRequest
 {
+    use HasBootstrapCache;
+
     /**
      * Authentication token
      */
@@ -21,8 +24,10 @@ class BootstrapRequest
      */
     private $called = [];
 
-    /*
-     * Which modules should be authenticated
+    /**
+     * which stores should be returned to the authenticated user
+     *
+     * @var array
      */
     protected $authenticated = [];
 
@@ -168,7 +173,7 @@ class BootstrapRequest
 
             // Check if method exists and is callable
             if ( method_exists($this, $method) ){
-                $value = $this->{$method}($params);
+                $value = $this->getCachedResponse($method, $params);
 
                 $data[] = $passKey ? [$method => $value] : $value;
 
