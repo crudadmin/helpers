@@ -102,7 +102,18 @@ class AppNotification extends AdminModel
             $query->orWhereHas('recipients', function($query){
                 $query->onlyMine();
             });
+
+            $query->orWhere(function($query){
+                $query->isNotPersistent();
+            });
         });
+    }
+
+    public function scopeIsNotPersistent($query)
+    {
+        $notPersistent = notificationsList()->where(fn($notif) => ($notif['persistent'] ?? true) === false);
+
+        $query->whereIn('code', $notPersistent->pluck('code')->toArray());
     }
 
     public function scopeWithReadState($query)
