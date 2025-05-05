@@ -15,15 +15,4 @@ class ConfigServiceProvider extends AdminHelperServiceProvider
     {
         $this->mergeConfigs(require __DIR__.'/../Config/config.php', 'admin_helpers', []);
     }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //Merge crudadmin configs
-        $this->mergeAdminConfigs(require __DIR__.'/../Config/admin.php');
-    }
 }
