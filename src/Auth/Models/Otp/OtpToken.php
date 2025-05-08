@@ -3,6 +3,7 @@
 namespace AdminHelpers\Auth\Models\Otp;
 
 use Mail;
+use Exception;
 use Admin\Helpers\SmartSms;
 use Admin\Eloquent\AdminModel;
 use AdminHelpers\Auth\Mail\OTPMail;
@@ -142,15 +143,21 @@ class OtpToken extends AdminModel
 
         $token = $this->getUnecryptedToken(true);
 
-        if ( $this->verificator == 'email' ) {
-            Mail::to($this->identifier)->send(
-                new OTPMail($token)
-            );
-        } else if ( $this->verificator == 'phone' ) {
-            (new SmartSms)->sendSMS(
-                $this->identifier,
-                'Pre pokračovanie zadajte nasledujúci verifikačný kód: '.$token
-            );
+        try {
+            if ( $this->verificator == 'email' ) {
+                Mail::to($this->identifier)->send(
+                    new OTPMail($token)
+                );
+            } else if ( $this->verificator == 'phone' ) {
+                (new SmartSms)->sendSMS(
+                    $this->identifier,
+                    _('Pre pokračovanie zadajte nasledujúci verifikačný kód:').' '.$token
+                );
+            }
+        } catch (Exception $e) {
+            report($e);
+
+            throw new Exception(_('SMS kód sa nepodarilo odoslať. Skúste neskôr prosím.'));
         }
 
         return $this;
