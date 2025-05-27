@@ -39,7 +39,7 @@ trait HasAuthorization
         $user = $this->getAuthModel();
 
         //User authorized
-        if ( $user && $user->password && Hash::check(request('password'), $user->password) ){
+        if ( $user && Hash::check(request('password'), $user->password) ){
             return $this->makeAuthResponse($user);
         }
 
