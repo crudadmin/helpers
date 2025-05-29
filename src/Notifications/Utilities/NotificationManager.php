@@ -39,13 +39,18 @@ class NotificationManager
         $this->recipientsPivot = collect([]);
     }
 
+    public function logChannel()
+    {
+        return Log::channel('notification');
+    }
+
     public function log($message)
     {
         if ( $this->cmd ){
             $this->cmd->info($message);
         }
 
-        Log::channel('notification')->info($message);
+        $this->logChannel()->info($message);
     }
 
     public function error($message)
@@ -54,7 +59,7 @@ class NotificationManager
             $this->cmd->error($message);
         }
 
-        Log::channel('notification')->error($message);
+        $this->logChannel()->error($message);
     }
 
     public function process()
@@ -81,11 +86,11 @@ class NotificationManager
             } catch (Exception $e){
                 $this->error('Notification ID #'.$notification->getKey().': '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine());
 
-                Log::error($e);
+                $this->logChannel()->error($e);
             } catch (Throwable $e){
                 $this->error('Notification ID #'.$notification->getKey().': '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine());
 
-                Log::error($e);
+                $this->logChannel()->error($e);
             }
         }
 
@@ -198,7 +203,7 @@ class NotificationManager
                 'title' => $notification->pushTitle ?: _('Nové hlásenie'),
                 'body' => $notification->pushMessage,
                 'image' => $notification->pushImage,
-                'data' => ($notification->data ?: []) + [
+                'data' => $this->castFcmData($notification->data ?: []) + [
                     'id' => $notification->getKey(),
                     'type' => $notification->type,
                 ],
@@ -223,7 +228,7 @@ class NotificationManager
 
             return $report->validTokens();
         } catch (Exception $e) {
-            $this->error($e->getMessage());
+            $this->error($e);
         }
 
         return [];
@@ -263,5 +268,12 @@ class NotificationManager
         ]));
 
         return $message;
+    }
+
+    private function castFcmData($data)
+    {
+        return array_map(function($value) {
+            return is_array($value) ? json_encode($value) : $value;
+        }, $data);
     }
 }
