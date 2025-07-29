@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use AdminHelpers\Auth\Controllers\OTPController;
 use AdminHelpers\Auth\Controllers\LoginController;
 use AdminHelpers\Auth\Controllers\RegisterController;
+use AdminHelpers\Auth\Controllers\OauthController;
 
 class AdminAuth
 {
@@ -28,6 +29,29 @@ class AdminAuth
         $this->otpMiddleware(function () use ($controller) {
             Route::post('auth/login/otp', [$controller, 'loginOTP']);
         });
+    }
+
+    /**
+     * Returns current user
+     *
+     * @param  mixed $controller
+     * @return void
+     */
+    public function user($controller = LoginController::class)
+    {
+        $this->middleware(function () use ($controller) {
+            Route::get('user', [$controller, 'user']);
+        }, ['admin']);
+    }
+
+    public function oauth($controller = OauthController::class)
+    {
+        $this->middleware(function () use ($controller) {
+            Route::get('admin/oauth/authorize', [$controller, 'oauthAuthorize']);
+            Route::get('admin/oauth/authorize/redirect', [$controller, 'oauthAuthorizeRedirect']);
+        }, ['admin']);
+
+        Route::post('admin/oauth/token', [$controller, 'token']);
     }
 
     /**
@@ -87,9 +111,9 @@ class AdminAuth
      *
      * @return void
      */
-    public function middleware($callback)
+    public function middleware($callback, $groups = [])
     {
-        Route::middleware(['throttle:auth'])->group(function () use ($callback) {
+        return Route::middleware(['throttle:auth', ...$groups])->group(function ($a) use ($callback) {
             $callback();
         });
     }

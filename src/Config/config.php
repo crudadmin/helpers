@@ -26,6 +26,13 @@ return [
     ],
 
     'auth' => [
+        'oauth' => [
+            // Registered Oauth app ids
+            'apps' => [
+                // 'appid_key' => [ 'name' => 'App name' ]
+            ],
+        ],
+
         'throttle' => [
             'auth' => 15,
             'otp' => 5,
