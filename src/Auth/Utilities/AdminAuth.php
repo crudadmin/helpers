@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use AdminHelpers\Auth\Controllers\OTPController;
 use AdminHelpers\Auth\Controllers\LoginController;
 use AdminHelpers\Auth\Controllers\RegisterController;
-use AdminHelpers\Auth\Controllers\OauthController;
+use AdminHelpers\Auth\Controllers\OAuthController;
 
 class AdminAuth
 {
@@ -44,7 +44,7 @@ class AdminAuth
         }, ['admin']);
     }
 
-    public function oauth($controller = OauthController::class)
+    public function oauth($controller = OAuthController::class)
     {
         $this->middleware(function () use ($controller) {
             Route::get('admin/oauth/authorize', [$controller, 'oauthAuthorize']);

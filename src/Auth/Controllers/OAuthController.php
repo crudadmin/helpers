@@ -7,7 +7,7 @@ use AdminHelpers\Auth\Concerns\HasOauth;
 use Admin;
 use Laravel\Sanctum\PersonalAccessToken;
 
-class OauthController extends Controller
+class OAuthController extends Controller
 {
     use HasOauth;
 
@@ -28,7 +28,7 @@ class OauthController extends Controller
 
         $name = $this->getOauthConfig($request->client_id, 'name');
 
-        $promtedUrl = action([OauthController::class, 'oauthAuthorizeRedirect'], ['code' => $code], false);
+        $promtedUrl = action([OAuthController::class, 'oauthAuthorizeRedirect'], ['code' => $code], false);
 
         $oauthParams = '?oauth='.$name.'&redirect='.urlencode($promtedUrl);
 
