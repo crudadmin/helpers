@@ -4,7 +4,6 @@ namespace AdminHelpers\Auth\Controllers;
 
 use Illuminate\Http\Request;
 use AdminHelpers\Auth\Concerns\HasOAuth;
-use Admin;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class OAuthController extends Controller
