@@ -3,13 +3,13 @@
 namespace AdminHelpers\Auth\Controllers;
 
 use Illuminate\Http\Request;
-use AdminHelpers\Auth\Concerns\HasOauth;
+use AdminHelpers\Auth\Concerns\HasOAuth;
 use Admin;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class OAuthController extends Controller
 {
-    use HasOauth;
+    use HasOAuth;
 
     /**
      * User will be moved to authorization modal page.

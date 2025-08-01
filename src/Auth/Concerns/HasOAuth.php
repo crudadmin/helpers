@@ -2,7 +2,7 @@
 
 namespace AdminHelpers\Auth\Concerns;
 
-trait HasOauth
+trait HasOAuth
 {
     /**
      * Into this session key will be stored authorization request
