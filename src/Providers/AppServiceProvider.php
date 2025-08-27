@@ -13,6 +13,7 @@ class AppServiceProvider extends AdminHelperServiceProvider
         ConfigServiceProvider::class,
         NotificationsServiceProvider::class,
         AuthServiceProvider::class,
+        SessionServiceProvider::class,
     ];
 
     protected $facades = [];
