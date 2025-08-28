@@ -103,7 +103,7 @@ class OtpToken extends AdminModel
         return isTestIdentifier($this->identifier) === true;
     }
 
-    private function generateTokenString($chars = 2, $numbers = 3)
+    public function generateTokenString($chars = 2, $numbers = 3)
     {
         $numbersGenerated = implode('', array_map(fn() => rand(0, 9), array_fill(0, $numbers, 1)));
 
@@ -117,7 +117,10 @@ class OtpToken extends AdminModel
 
     public function generateNewToken()
     {
-        $tokenString = $this->generateTokenString();
+        $tokenString = $this->generateTokenString(
+            config('admin_helpers.auth.otp.length.chars', 2),
+            config('admin_helpers.auth.otp.length.numbers', 3),
+        );
 
         $format = implode('', array_map(function($char){
             return is_numeric($char) ? '0' : 'x';

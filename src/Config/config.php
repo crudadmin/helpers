@@ -41,6 +41,7 @@ return [
         'otp' => [
             'enabled' => false,
             'debug' => env('AUTH_TOKEN_DEBUG', false),
+            'length' => [ 'chars' => 2, 'numbers' => 3 ],
 
             //Verification test numbers
             'test_identifiers' => [
