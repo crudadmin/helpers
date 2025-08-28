@@ -9,6 +9,6 @@ class RegisterController extends Controller implements Authorizable
 {
     use HasRegistration;
 
-    // Which table is used for registration.
-    public $table = 'users';
+    // Which table is used for registration. You can update it.
+    public $table = null;
 }

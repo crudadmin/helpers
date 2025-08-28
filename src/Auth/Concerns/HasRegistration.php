@@ -24,8 +24,16 @@ trait HasRegistration
     public function getAuthModel()
     {
         //Get logged user in case of incomplete registration via Google/Apple socials.
-        //Or new user.
-        return client() ?: Admin::getModelByTable($this->table);
+        if ( $client = client() ) {
+            return $client;
+        }
+
+        if ( $this->table ) {
+            return Admin::getModelByTable($this->table);
+        }
+
+        // Get default user provider.
+        return Admin::getModel(class_basename(env('AUTH_MODEL', config('auth.providers.users.model'))));
     }
 
     /**

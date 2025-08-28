@@ -94,7 +94,11 @@ trait HasOTPAuthorization
 
         $verificator = $verificator ?: $this->getVerificator();
 
-        $token = otpModel()->fill([
+        if ( !$otpModel = otpModel() ) {
+            throw new \Exception('OTP model not found. Check OTP configuration in admin_helpers.');
+        }
+
+        $token = $otpModel->fill([
                 'table' => $isModel ? $identifier->getTable() : null,
                 'row_id' => $isModel ? $identifier->getKey() : null,
                 'verificator' => $verificator,
