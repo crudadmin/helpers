@@ -7,11 +7,11 @@ use Admin;
 trait HasAuthModel
 {
     /**
-     * Table used for users registration
+     * Guard used for authentication
      *
      * @var string|null
      */
-    public $table = null;
+    public $guard = null;
 
     /**
      * Returns the auth model into which we are logging in
@@ -25,13 +25,16 @@ trait HasAuthModel
             return $client;
         }
 
-        if ( $this->table ) {
-            return Admin::getModelByTable($this->table);
+        // Get default model from config, or from guard defined in controller.
+        if ( $this->guard ) {
+            $defaultModel = config('auth.providers.'.config('auth.guards.'.$this->guard)['provider'])['model'];
+        } else {
+            $defaultModel = auth()->guard()->getProvider()->getModel();
         }
 
         // Model from provider by default laravel guard
         return Admin::getModel(
-            class_basename(auth()->guard()->getProvider()->getModel())
+            class_basename($defaultModel)
         );
     }
 }
