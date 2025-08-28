@@ -5,23 +5,27 @@ namespace AdminHelpers\Auth\Concerns;
 use Admin;
 use Illuminate\Support\Facades\Hash;
 use AdminHelpers\Auth\Concerns\HasResponse;
+use AdminHelpers\Auth\Concerns\HasAuthModel;
 use AdminHelpers\Auth\Concerns\HasAuthFields;
 use AdminHelpers\Auth\Concerns\HasOTPAuthorization;
 
 trait HasAuthorization
 {
-    use HasAuthFields,
+    use HasAuthModel,
+        HasAuthFields,
         HasOTPAuthorization,
         HasResponse;
 
     /**
-     * Returns the auth model into which we are logging in
+     * Finds logged user
      *
-     * @return AdminModel|null
+     * @return void
      */
-    public function getAuthModel()
+    public function findUser()
     {
-        return $this->findUserFromRequest(Admin::getAuthModel());
+        $model = $this->getAuthModel();
+
+        return $this->findUserFromRequest($model);
     }
 
     /**
@@ -36,7 +40,7 @@ trait HasAuthorization
             'password' => 'required',
         ]);
 
-        $user = $this->getAuthModel();
+        $user = $this->findUser();
 
         //User authorized
         if ( $user && Hash::check(request('password'), $user->password) ){
@@ -55,7 +59,7 @@ trait HasAuthorization
     {
         $this->validate(request(), $this->getAuthFields());
 
-        if ( !($user = $this->getAuthModel()) ) {
+        if ( !($user = $this->findUser()) ) {
             return autoAjax()->error(_('Používateľ s prihlasovácimi údajmi nebol nájdeny.'), 401);
         }
 
@@ -79,7 +83,7 @@ trait HasAuthorization
             'token' => 'required',
         ]);
 
-        if ( !($user = $this->getAuthModel()) ) {
+        if ( !($user = $this->findUser()) ) {
             return autoAjax()->error(_('Používateľ s prihlasovácimi údajmi nebol nájdeny.'), 401);
         }
 
@@ -122,7 +126,7 @@ trait HasAuthorization
      */
     public function logout()
     {
-        $user = client();
+        $user = auth()->user();
 
         // Remove access token
         if ( $token = $user->currentAccessToken() ){

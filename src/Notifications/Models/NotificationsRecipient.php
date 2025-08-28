@@ -55,8 +55,8 @@ class NotificationsRecipient extends AdminModel
     public function getCurrentSelector()
     {
         return [
-            'table' => client()->getTable(),
-            'row_id' => client()->getKey(),
+            'table' => auth()->user()->getTable(),
+            'row_id' => auth()->user()->getKey(),
         ];
     }
 }

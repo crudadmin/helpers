@@ -95,8 +95,8 @@ class AppNotification extends AdminModel
         $query->where(function($query){
             //Find by owner
             $query->where(
-                $this->getForeignColumn(client()->getTable()),
-                client()->getKey()
+                $this->getForeignColumn(auth()->user()->getTable()),
+                auth()->user()->getKey()
             );
 
             $query->orWhereHas('recipients', function($query){

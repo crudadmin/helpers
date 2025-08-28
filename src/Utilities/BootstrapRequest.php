@@ -48,7 +48,8 @@ class BootstrapRequest
      */
     private function setClient()
     {
-        $this->client = client();
+        // Fallback for client() function on old projects
+        $this->client = function_exists('client') ? client() : auth()->user();
 
         if ( $this->client ) {
             $this->onClient($this->client);

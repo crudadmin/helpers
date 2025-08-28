@@ -3,9 +3,10 @@
 namespace AdminHelpers\Providers;
 
 use Admin;
-use AdminHelpers\Notifications\Providers\NotificationsServiceProvider;
-use AdminHelpers\Auth\Providers\AuthServiceProvider;
 use Admin\Providers\AdminHelperServiceProvider;
+use AdminHelpers\Auth\Providers\AuthServiceProvider;
+use AdminHelpers\Shared\Middleware\AuthOptionalMiddleware;
+use AdminHelpers\Notifications\Providers\NotificationsServiceProvider;
 
 class AppServiceProvider extends AdminHelperServiceProvider
 {
@@ -18,7 +19,9 @@ class AppServiceProvider extends AdminHelperServiceProvider
 
     protected $facades = [];
 
-    protected $routeMiddleware = [];
+    protected $routeMiddleware = [
+        'auth.optional' => AuthOptionalMiddleware::class,
+    ];
 
     /**
      * Bootstrap the application events.

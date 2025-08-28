@@ -6,35 +6,17 @@ use Admin;
 use AutoAjax\AutoAjax;
 use Illuminate\Http\Response;
 use AdminHelpers\Auth\Concerns\HasResponse;
+use AdminHelpers\Auth\Concerns\HasAuthModel;
 use AdminHelpers\Auth\Events\UserRegistered;
 use AdminHelpers\Auth\Concerns\HasAuthFields;
 use AdminHelpers\Auth\Concerns\HasOTPAuthorization;
 
 trait HasRegistration
 {
-    use HasAuthFields,
+    use HasAuthModel,
+        HasAuthFields,
         HasOTPAuthorization,
         HasResponse;
-
-    /**
-     * Returns the auth model into which we are logging in
-     *
-     * @return AdminModel|null
-     */
-    public function getAuthModel()
-    {
-        //Get logged user in case of incomplete registration via Google/Apple socials.
-        if ( $client = client() ) {
-            return $client;
-        }
-
-        if ( $this->table ) {
-            return Admin::getModelByTable($this->table);
-        }
-
-        // Get default user provider.
-        return Admin::getModel(class_basename(env('AUTH_MODEL', config('auth.providers.users.model'))));
-    }
 
     /**
      * Returns the success message

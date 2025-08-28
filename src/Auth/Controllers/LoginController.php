@@ -10,12 +10,12 @@ class LoginController extends Controller implements Authorizable
     use HasAuthorization;
 
     /**
-     * Returns current user response
+     * Returns currently logged user
      *
      * @return void
      */
     public function user()
     {
-        return $this->authorizedResponse(admin());
+        return $this->authorizedResponse(auth()->user());
     }
 }

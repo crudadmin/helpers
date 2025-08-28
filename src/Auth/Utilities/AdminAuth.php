@@ -41,7 +41,7 @@ class AdminAuth
     {
         $this->middleware(function () use ($controller) {
             Route::get('user', [$controller, 'user']);
-        }, ['admin']);
+        });
     }
 
     public function oauth($controller = OAuthController::class)
