@@ -39,7 +39,7 @@ class ImportFileRule extends AdminRule
         try {
             $this->importer = $row->loadImporter();
 
-            $this->importer->checkColumnsAviability();
+            $this->importer->checkColumnsAvaiability();
             $this->importer->checkColumnsFormat();
         } catch (Exception|Throwable $e){
             $row->update(['state' => 'error']);

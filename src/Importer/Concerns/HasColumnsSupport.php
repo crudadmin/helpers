@@ -74,7 +74,7 @@ trait HasColumnsSupport
         }
     }
 
-    public function checkColumnsAviability($errors = [])
+    public function checkColumnsAvaiability($errors = [])
     {
         $columns = $this->getFinalColumns();
 
