@@ -40,8 +40,7 @@ class ImportsFile extends AdminModel
         'grid' => ['big', 'half', 'full'],
         'buttons.create' => 'Nový import',
         'title.insert' => 'Nahrajte importný súbor',
-        'title.update' => ':number - :name',
-        'columns.number.before' => 'user_id',
+        'title.update' => ':name',
         'columns.last_import.name' => 'Posledný import',
     ];
 
