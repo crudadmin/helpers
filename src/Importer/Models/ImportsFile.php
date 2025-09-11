@@ -154,11 +154,6 @@ class ImportsFile extends AdminModel
 
     public function canReimport()
     {
-        // Allow only in development mode updating existing import
-        if ( isDebugMode() === true ){
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }
