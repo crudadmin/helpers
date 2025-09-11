@@ -48,16 +48,8 @@ class ImportFileRule extends AdminRule
         }
     }
 
-    public function creating(AdminModel $row)
-    {
-        $row->setNumber();
-    }
-
     public function created(AdminModel $row)
     {
-        // First, convert csv to excel if needed
-        $row->convertCsvToExcel();
-
         if ( $row->canImport() === false ) {
             return;
         }
@@ -68,9 +60,6 @@ class ImportFileRule extends AdminRule
 
     public function updated(AdminModel $row)
     {
-        // First, convert csv to excel if needed
-        $row->convertCsvToExcel();
-
         if ( $row->canImport(true) === false ) {
             return;
         }

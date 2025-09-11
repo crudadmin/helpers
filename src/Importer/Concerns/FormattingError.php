@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utilities\Import\Concerns;
+namespace AdminHelpers\Importer\Concerns;
 
 use Exception;
 
