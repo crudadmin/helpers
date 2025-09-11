@@ -6,6 +6,7 @@ use Admin;
 use Admin\Providers\AdminHelperServiceProvider;
 use AdminHelpers\Auth\Providers\AuthServiceProvider;
 use AdminHelpers\Shared\Middleware\AuthOptionalMiddleware;
+use AdminHelpers\Importer\Providers\ImporterServiceProvider;
 use AdminHelpers\Notifications\Providers\NotificationsServiceProvider;
 
 class AppServiceProvider extends AdminHelperServiceProvider
@@ -15,6 +16,7 @@ class AppServiceProvider extends AdminHelperServiceProvider
         NotificationsServiceProvider::class,
         AuthServiceProvider::class,
         SessionServiceProvider::class,
+        ImporterServiceProvider::class,
     ];
 
     protected $facades = [];
