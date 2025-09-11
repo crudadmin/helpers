@@ -33,4 +33,18 @@ trait HasImportSupport
     {
         return array_combine($this->getImportClassNameTypes(), $this->getImports()->toArray());
     }
+
+    protected function getImportExtensions()
+    {
+        // Take extensions from imports
+        $extensions = $this->getImports()->pluck('extensions')->flatten()->unique()->filter()->toArray();
+
+        // Add extensions from config
+        $extensions = array_merge($extensions, config('admin_helpers.importer.extensions', []));
+
+        // Filter extension
+        $extensions = array_values(array_filter(array_unique($extensions)));
+
+        return implode(',', $extensions);
+    }
 }

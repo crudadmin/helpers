@@ -66,7 +66,7 @@ class ImportsFile extends AdminModel
             'user' => 'name:Používateľ|belongsTo:admins,username|removeFromForm',
             'name' => 'name:Popis',
             'type' => 'name:Typ importu|type:select|option::name|default:'.($this->getImportClassNameTypes()[0] ?? '').'|required|sub_component:ShowSampleImportFile',
-            'file' => 'name:Importny súbor (.xls/.csv)|type:file|extensions:'.getImportExtensions().'|required',
+            'file' => 'name:Importny súbor (.xls/.csv)|type:file|extensions:'.$this->getImportExtensions().'|required',
             'state' => 'name:Stav|type:select|default:new|removeFromForm|required',
         ];
     }
