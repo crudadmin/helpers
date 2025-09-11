@@ -21,6 +21,8 @@ class ImportFileRule extends AdminRule
 
     public function bootImport($row)
     {
+        $row->runAdminRule('importing');
+
         /**
          * TODO: ak spadne import, zrusit vsetky transakcie.
          */

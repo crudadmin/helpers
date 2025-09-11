@@ -41,8 +41,6 @@ class ProcessImportButton extends Button
     {
         $rule = new ImportFileRule();
 
-        $row->convertCsvToExcel();
-
         $rule->bootImport($row);
         $rule->import($row);
 
