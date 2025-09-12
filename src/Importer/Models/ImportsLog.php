@@ -10,7 +10,7 @@ class ImportsLog extends AdminModel
     /*
      * Model created date, for ordering tables in database and in user interface
      */
-    protected $migration_date = '2020-03-27 06:49:15';
+    protected $migration_date = '2025-03-27 04:42:16';
 
     /*
      * Template name
