@@ -39,6 +39,10 @@ class AppNotification extends AdminModel
 
     protected $insertable = false;
 
+    protected $inMenu = false;
+
+    protected $withoutParent = true;
+
     // For sending purposes
     public $recipientsKeys = [];
     public $recipientsPivot = [];
@@ -93,11 +97,12 @@ class AppNotification extends AdminModel
         $query->select($this->getTable().'.*')->withReadState();
 
         $query->where(function($query){
+            if ( !($foreignColumn = $this->getForeignColumn(auth()->user()->getTable())) ){
+                throw new \Exception('Foreign column (belongsTo) in notification model could not be found for table: '.auth()->user()->getTable());
+            }
+
             //Find by owner
-            $query->where(
-                $this->getForeignColumn(auth()->user()->getTable()),
-                auth()->user()->getKey()
-            );
+            $query->where($foreignColumn, auth()->user()->getKey());
 
             $query->orWhereHas('recipients', function($query){
                 $query->onlyMine();

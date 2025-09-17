@@ -34,6 +34,8 @@ class NotificationsToken extends AdminModel
 
     public $timestamps = false;
 
+    protected $inMenu = false;
+
     /*
      * Automatic form and database generator by fields list (prettier-ignore)
      * :name - field name
