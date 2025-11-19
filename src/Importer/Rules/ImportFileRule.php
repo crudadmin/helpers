@@ -26,7 +26,7 @@ class ImportFileRule extends AdminRule
         /**
          * TODO: ak spadne import, zrusit vsetky transakcie.
          */
-        $row->user_id = $row->user_id ?: admin()->getKey();
+        $row->user_id = $row->user_id ?: admin()?->getKey();
 
         if ( !($importer = $row->getImporter()) ){
             $row->update(['state' => 'error']);
