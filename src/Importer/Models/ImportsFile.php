@@ -155,4 +155,9 @@ class ImportsFile extends AdminModel
     {
         return true;
     }
+
+    public function canProcess()
+    {
+        return in_array($this->state, ['ready', 'error', $this->canReimport() ? 'completed' : '']);
+    }
 }

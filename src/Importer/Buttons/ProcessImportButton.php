@@ -29,7 +29,7 @@ class ProcessImportButton extends Button
      */
     public function __construct($row)
     {
-        $this->active = in_array($row->state, ['ready', 'error', $row->canReimport() ? 'completed' : '']);
+        $this->active = $row->canProcess();
     }
 
     /**
