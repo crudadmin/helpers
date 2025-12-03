@@ -94,15 +94,17 @@ class AppNotification extends AdminModel
 
     public function scopeOnlyMine($query)
     {
+        $user = auth()->user();
+
         $query->select($this->getTable().'.*')->withReadState();
 
-        $query->where(function($query){
-            if ( !($foreignColumn = $this->getForeignColumn(auth()->user()->getTable())) ){
-                throw new \Exception('Foreign column (belongsTo) in notification model could not be found for table: '.auth()->user()->getTable());
+        $query->where(function($query) use ($user) {
+            if ( !($foreignColumn = $this->getForeignColumn($user->getTable())) ){
+                throw new \Exception('Foreign column (belongsTo) in notification model could not be found for table: '.$user->getTable());
             }
 
             //Find by owner
-            $query->where($foreignColumn, auth()->user()->getKey());
+            $query->where($foreignColumn, $user->getKey());
 
             $query->orWhereHas('recipients', function($query){
                 $query->onlyMine();
@@ -119,6 +121,10 @@ class AppNotification extends AdminModel
         $notPersistent = notificationsList()->where(fn($notif) => ($notif['persistent'] ?? true) === false);
 
         $query->whereIn('code', $notPersistent->pluck('code')->toArray());
+
+        if ( $user = user() ){
+            $query->where($query->qualifyColumn('created_at'), '>=', $user->created_at);
+        }
     }
 
     public function scopeWithReadState($query)
