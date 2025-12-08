@@ -121,7 +121,9 @@ class AppNotification extends AdminModel
     public function scopeOnlyAfterNotificationDate($query)
     {
         $query->where(function($query){
-            $query->whereNull('notify_at')->orWhere('notify_at', '<=', now());
+            $column = $this->getTable().'.notify_at';
+
+            $query->whereNull($column)->orWhere($column, '<=', now());
         });
     }
 
