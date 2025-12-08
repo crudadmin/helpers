@@ -114,6 +114,15 @@ class AppNotification extends AdminModel
                 $query->isNotPersistent();
             });
         });
+
+        $query->onlyAfterNotificationDate();
+    }
+
+    public function scopeOnlyAfterNotificationDate($query)
+    {
+        $query->where(function($query){
+            $query->whereNull('notify_at')->orWhere('notify_at', '<=', now());
+        });
     }
 
     public function scopeIsNotPersistent($query)
