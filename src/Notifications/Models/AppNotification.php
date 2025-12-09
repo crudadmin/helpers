@@ -133,7 +133,7 @@ class AppNotification extends AdminModel
 
         $query->whereIn('code', $notPersistent->pluck('code')->toArray());
 
-        if ( $user = user() ){
+        if ( $user = auth()->user() ){
             $query->where($query->qualifyColumn('created_at'), '>=', $user->created_at);
         }
     }
