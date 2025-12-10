@@ -39,8 +39,6 @@ trait HasVerifiedMethods
      */
     public function isVerified($method, $identifier)
     {
-        $identifier = $identifier ?: $this->getAttribute($method);
-
         $this->fixOldVerifiedFormat();
 
         // If no identifier has been passed, deny access.
