@@ -43,6 +43,11 @@ trait HasVerifiedMethods
 
         $this->fixOldVerifiedFormat();
 
+        // If no identifier has been passed, deny access.
+        if ( !$identifier ) {
+            return false;
+        }
+
         //If not verification method has been passed, and user exists. We can pass true.
         if ( $this->exists && !$method ){
             return true;

@@ -111,54 +111,36 @@ trait HasRegistration
      */
     protected function verifyRegistrationOtp($model, $data, $destroyToken = true)
     {
-        $defaultVerificator = $this->getVerificator();
-        $verificator = request('verificator');
-
-        //If no verificator has been passed, but app requires verificator and user has not verified this method yet.
-        if ( !$verificator && $defaultVerificator && $model->isVerified($defaultVerificator, $data[$defaultVerificator] ?? '') === false ) {
-            return $this->repeatRegistrationMessage();
+        // No verification method is required, so we can skip verification.
+        if (!($verificator = $this->getVerificator())){
+            return;
         }
 
-        //Uf user is logged in already and verification method is already verified as well, skip.
-        //Or user is not logged in. Thus is not verified.
-        elseif ( $verificator ) {
-            $identifier = $data[$verificator] ?? '';
+        $identifier = $data[$verificator] ?? '';
 
-            // This method is not verified yet, so we need to verify it.
-            if ( $model->isVerified($verificator, $identifier) == false ) {
-                // Otp code has been passed, but it is not valid.
-                if ( $otpCode = request('token') ){
-                    // If token verification passed, add verified method to model.
-                    if ( $token = $this->findToken($otpCode, $identifier) ) {
-                        $model->addVerified($token->verificator, $identifier);
+        //If user is logged in and verification method is already verified, skip.
+        if ( $model->isVerified($verificator, $identifier) === true ) {
+            return;
+        }
 
-                        // Delete token after verification
-                        if ( $destroyToken === true ) {
-                            $token->delete();
-                        }
-                    }
+        // Otp code has been passed. Proceed with verification completion.
+        if ( $otpCode = request('token') ){
+            // If token verification passed, add verified method to model.
+            if ( !($token = $this->findToken($otpCode, $identifier)) ) {
+                return autoAjax()->error(_('Prihlasovací kód nie je správny.'), 401)->throw();
+            }
 
-                    // Wrong code
-                    else {
-                        return autoAjax()->error(_('Prihlasovací kód nie je správny.'), 401)->throw();
-                    }
-                }
+            $model->addVerified($token->verificator, $identifier);
 
-                // Otp code has not been passed, so we need to return new code to go through the registration process again.
-                else {
-                    return $this->createRegistrationOtpResponse($model, $data);
-                }
+            // Delete token after verification
+            if ( $destroyToken === true ) {
+                $token->delete();
             }
         }
-    }
 
-    /**
-     * Something wrong happened during registration process, so we need to notify user about repeating the process.
-     *
-     * @return void
-     */
-    protected function repeatRegistrationMessage()
-    {
-        return autoAjax()->error(_('Zopakujte prosím proces registrácie.'), 401)->throw();
+        // Otp code has not been passed, so we need to return new code to go through the registration process again.
+        else {
+            return $this->createRegistrationOtpResponse($model, $data);
+        }
     }
 }
