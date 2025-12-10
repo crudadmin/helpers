@@ -91,7 +91,7 @@ trait HasAuthorization
             return autoAjax()->error(_('Prihlasovací kód nie je správny.'), 401);
         }
 
-        $user->addVerified($token->verificator)->save();
+        $user->addVerified($token->verificator, $token->identifier)->save();
 
         $token->forceDelete();
 
@@ -111,7 +111,7 @@ trait HasAuthorization
                 $user = $auth->getUser();
 
                 if ( $user->email ){
-                    $user->addVerified('email')->save();
+                    $user->addVerified('email', $user->email)->save();
                 }
 
                 return $this->makeAuthResponse($user, 'social');
