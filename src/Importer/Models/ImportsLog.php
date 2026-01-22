@@ -33,7 +33,6 @@ class ImportsLog extends AdminModel
 
     protected $active = false;
 
-
     protected $settings = [
         'title.insert' => 'Nové hlásenie',
     ];

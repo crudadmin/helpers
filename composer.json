@@ -2,11 +2,18 @@
     "name": "crudadmin/helpers",
     "type": "library",
     "description": "Laravel set of helpers package for administration based on crudadmin system",
-    "keywords": ["eshop", "admin", "laravel"],
+    "keywords": [
+        "eshop",
+        "admin",
+        "laravel"
+    ],
     "homepage": "https://www.marekgogol.sk",
     "license": "MIT",
     "authors": [
-        { "name": "Marek Gogoľ", "email": "info@marekgogol.sk" }
+        {
+            "name": "Marek Gogoľ",
+            "email": "info@marekgogol.sk"
+        }
     ],
     "require": {
         "php": ">=8.3.0",
