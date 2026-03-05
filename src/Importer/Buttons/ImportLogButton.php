@@ -68,6 +68,6 @@ class ImportLogButton extends Button
     {
         return $this->title(_('Hlásenia').' ('.$row->logs->count().')')->warning(
             $this->getLogContent($row, true)
-        );
+        )->size('md');
     }
 }
