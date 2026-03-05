@@ -1,11 +1,11 @@
 <?php
 
-namespace AdminHelpers\Importer\Buttons;
+namespace AdminHelpers\Shared\Buttons;
 
 use Admin\Eloquent\AdminModel;
 use Admin\Helpers\Button;
 
-class ImportLogButton extends Button
+class LogsButton extends Button
 {
     /*
      * Here is your place for binding button properties for each row
@@ -45,7 +45,10 @@ class ImportLogButton extends Button
 
             $color = $log->type == 'error' ? 'red' : 'inherit';
 
-            $message = $log->created_at->format('d.m.Y H:i').' '.$log->getSelectOption('code').($log->message ? ' - '.$log->message : '');
+            $codeName = $log->getSelectOption('code');
+            $codeName = is_array($codeName) ? $codeName['name'] : $codeName;
+
+            $message = $log->created_at->format('d.m.Y H:i').' '.$codeName.($log->message ? ' - '.$log->message : '');
 
             //Add clone log into clipboard
             if ( $log->log && $withLog == true ) {
@@ -66,8 +69,8 @@ class ImportLogButton extends Button
      */
     public function fire(AdminModel $row)
     {
-        return $this->title(_('Hlásenia').' ('.$row->logs->count().')')->warning(
-            $this->getLogContent($row, true)
-        )->size('md');
+        $message = $this->getLogContent($row, true);
+
+        return $this->title(_('Hlásenia').' ('.$row->logs->count().')')->warning($message)->size('md');
     }
 }

@@ -4,9 +4,9 @@ namespace AdminHelpers\Importer\Models;
 
 use Admin\Fields\Group;
 use Admin\Eloquent\AdminModel;
+use AdminHelpers\Shared\Buttons\LogsButton;
 use AdminHelpers\Importer\Rules\ImportFileRule;
 use AdminHelpers\Importer\Concerns\HasImportLogs;
-use AdminHelpers\Importer\Buttons\ImportLogButton;
 use AdminHelpers\Importer\Concerns\HasImportSupport;
 use AdminHelpers\Importer\Buttons\ProcessImportButton;
 
@@ -49,7 +49,7 @@ class ImportsFile extends AdminModel
     ];
 
     protected $buttons = [
-        ImportLogButton::class,
+        LogsButton::class,
         ProcessImportButton::class,
     ];
 
