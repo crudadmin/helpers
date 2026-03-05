@@ -13,7 +13,10 @@ class LogsButton extends Button
     public function __construct(AdminModel $row)
     {
         //Name of button on hover
-        $this->name = $this->getLogContent($row, false);
+        $this->name = _('Zobraziť hlásenia').' ('.$row->logs->count().')';
+
+        // Tooltip content
+        $this->tooltip = $this->getLogContent($row, false);
 
         $hasError = $row->logs->where('type', 'error')->count() > 0;
 
