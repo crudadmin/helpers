@@ -4,7 +4,6 @@ namespace AdminHelpers\Importer\Buttons;
 
 use Admin\Helpers\Button;
 use Admin\Eloquent\AdminModel;
-use AdminHelpers\Importer\Rules\ImportFileRule;
 
 class ProcessImportButton extends Button
 {
@@ -39,10 +38,7 @@ class ProcessImportButton extends Button
      */
     public function fire(AdminModel $row)
     {
-        $rule = new ImportFileRule();
-
-        $rule->bootImport($row);
-        $rule->import($row);
+        $row->process();
 
         return $this->message(_('Import bol úspešne spracovaný.'));
     }

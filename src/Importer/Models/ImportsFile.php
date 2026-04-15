@@ -160,4 +160,11 @@ class ImportsFile extends AdminModel
     {
         return in_array($this->state, ['ready', 'error', $this->canReimport() ? 'completed' : '']);
     }
+
+    public function process()
+    {
+        $rule = new ImportFileRule();
+        $rule->bootImport($this);
+        $rule->import($this);
+    }
 }
