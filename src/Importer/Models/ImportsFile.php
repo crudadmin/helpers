@@ -161,6 +161,11 @@ class ImportsFile extends AdminModel
         return in_array($this->state, ['ready', 'error', $this->canReimport() ? 'completed' : '']);
     }
 
+    /**
+     * Run import process
+     *
+     * @return void
+     */
     public function process()
     {
         $rule = new ImportFileRule();
