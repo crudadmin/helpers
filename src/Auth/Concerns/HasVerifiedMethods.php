@@ -5,6 +5,16 @@ namespace AdminHelpers\Auth\Concerns;
 trait HasVerifiedMethods
 {
     /**
+     * Check if model has verified column
+     *
+     * @return void
+     */
+    public function hasVerifiedColumn()
+    {
+        return $this->getField('verified') ? true : false;
+    }
+
+    /**
      * Add login method as verified, eg. email, phone, etc.
      *
      * @param  string $method
@@ -14,6 +24,11 @@ trait HasVerifiedMethods
      */
     public function addVerified($method, $identifier)
     {
+        // Skip column updating if is not present
+        if ( $this->hasVerifiedColumn() === false ) {
+            return $this;
+        }
+
         $this->fixOldVerifiedFormat();
 
         $verified = $this->verified?->toArray() ?: [];

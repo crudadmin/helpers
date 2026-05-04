@@ -72,10 +72,20 @@ class OtpToken extends AdminModel
      */
     public function getTokenResponseArray($verified = false)
     {
-        return $this->setTokenResponse() + [
+        $data = $this->setTokenResponse() + [
             'token' => $this->getUnecryptedToken(),
             'verified' => $verified,
         ];
+
+        // Store response support
+        if ( config('autoajax.store', false) === true ) {
+            return [
+                'verified' => $verified,
+                'otp' => $data,
+            ];
+        }
+
+        return $data;
     }
 
     public function getLengthAttribute()
