@@ -30,28 +30,40 @@ trait HasImportSupport
      */
     public function getImporter()
     {
-        return $this->getImports()
-                    ->first(fn($import) => strpos($import['class'], $this->type) !== false);
-    }
-
-    /**
-     * Boots import for given row type
-     *
-     * @return void
-     */
-    public function loadImporter()
-    {
         if ( $this->importer ){
             return $this->importer;
         }
 
-        $class = $this->getImporter()['class'] ?? null;
+        $class = $this->getImporterOptions()['class'] ?? null;
 
         if ( !$class ){
             throw new Exception(_('Nebol nájdený žiaden importný systém pre tento typ importu.'));
         }
 
         return $this->importer = new $class($this);
+    }
+
+    /**
+     * @DEPRECATED
+     * Use getImporter() instead
+     *
+     * @return void
+     */
+    public function loadImporter()
+    {
+        return $this->getImporter();
+    }
+
+    /**
+     * Finds import options for given import type
+     *
+     * @return void
+     */
+    public function getImporterOptions($type = null)
+    {
+        $type = $type ?: $this->type;
+
+        return $this->getImports()->first(fn($import) => strpos($import['class'], $type) !== false);
     }
 
     /**
@@ -103,7 +115,7 @@ trait HasImportSupport
      */
     public function canImport($update = false)
     {
-        $importer = $this->getImporter();
+        $importer = $this->getImporterOptions();
 
         if ( ($importer['autoimport'] ?? true) === false){
             return false;
