@@ -63,7 +63,6 @@ trait HasImportProcess
 
             $this->setImportState('completed');
         } catch (Exception|Throwable $e) {
-            dd($this->toArray(), $e);
             $this->setImportState('error');
 
             $this->logException($e);
