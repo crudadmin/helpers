@@ -115,6 +115,11 @@ trait HasImportSupport
      */
     public function canImport($update = false)
     {
+        // No file attached, cannot import.
+        if ( !$this->file ) {
+            return false;
+        }
+
         $importer = $this->getImporterOptions();
 
         if ( ($importer['autoimport'] ?? true) === false){
