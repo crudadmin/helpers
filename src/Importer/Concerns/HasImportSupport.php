@@ -2,8 +2,17 @@
 
 namespace AdminHelpers\Importer\Concerns;
 
+use Exception;
+
 trait HasImportSupport
 {
+    /**
+     * Booted importer instance
+     *
+     * @var mixed
+     */
+    protected $importer;
+
     /**
      * Returns all imports
      *
@@ -32,9 +41,17 @@ trait HasImportSupport
      */
     public function loadImporter()
     {
-        $class = $this->getImporter()['class'];
+        if ( $this->importer ){
+            return $this->importer;
+        }
 
-        return new $class($this);
+        $class = $this->getImporter()['class'] ?? null;
+
+        if ( !$class ){
+            throw new Exception(_('Nebol nájdený žiaden importný systém pre tento typ importu.'));
+        }
+
+        return $this->importer = new $class($this);
     }
 
     /**
