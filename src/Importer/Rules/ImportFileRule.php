@@ -18,7 +18,7 @@ class ImportFileRule extends AdminRule
         try {
             $row->validate();
         } catch (Exception|Throwable $e){
-            autoAjax()->error($e->getMessage(), 422)->throw();
+            autoAjax()->error($e, 422)->throw();
         }
     }
 
@@ -31,7 +31,7 @@ class ImportFileRule extends AdminRule
         try {
             $row->process();
         } catch (Exception|Throwable $e){
-            autoAjax()->error($e->getMessage(), 422)->throw();
+            autoAjax()->error($e, 422)->throw();
         }
     }
 
@@ -44,7 +44,7 @@ class ImportFileRule extends AdminRule
         try {
             $row->process();
         } catch (Exception|Throwable $e){
-            autoAjax()->error($e->getMessage(), 422)->throw();
+            autoAjax()->error($e, 422)->throw();
         }
     }
 }
