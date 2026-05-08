@@ -130,7 +130,8 @@ trait HasImportSupport
             return $this->canReimport();
         }
 
-        return true;
+        // Allow import only that states during row creation.
+        return in_array($this->state ?: '', ['new', 'ready', '']);
     }
 
     /**
