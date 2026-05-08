@@ -2,17 +2,20 @@
 
 namespace AdminHelpers\Importer\Models;
 
-use Admin\Fields\Group;
 use Admin\Eloquent\AdminModel;
-use AdminHelpers\Shared\Buttons\LogsButton;
-use AdminHelpers\Importer\Rules\ImportFileRule;
-use AdminHelpers\Importer\Concerns\HasImportLogs;
-use AdminHelpers\Importer\Concerns\HasImportSupport;
+use Admin\Fields\Group;
 use AdminHelpers\Importer\Buttons\ProcessImportButton;
+use AdminHelpers\Importer\Concerns\HasImportLogs;
+use AdminHelpers\Importer\Concerns\HasImportProcess;
+use AdminHelpers\Importer\Concerns\HasImportSupport;
+use AdminHelpers\Importer\Rules\ImportFileRule;
+use AdminHelpers\Shared\Buttons\LogsButton;
 
 class ImportsFile extends AdminModel
 {
-    use HasImportSupport, HasImportLogs;
+    use HasImportSupport,
+        HasImportProcess,
+        HasImportLogs;
 
     /*
      * Model created date, for ordering tables in database and in user interface
@@ -134,42 +137,5 @@ class ImportsFile extends AdminModel
         $attributes['last_import'] = ($this->updated_at ?: $this->created_at)->format('d.m.Y H:i');
 
         return $attributes;
-    }
-
-    public function canImport($update = false)
-    {
-        $importer = $this->getImporter();
-
-        if ( ($importer['autoimport'] ?? true) === false){
-            return false;
-        }
-
-        if ( $update === true ) {
-            return $this->canReimport();
-        }
-
-        return true;
-    }
-
-    public function canReimport()
-    {
-        return true;
-    }
-
-    public function canProcess()
-    {
-        return in_array($this->state, ['ready', 'error', $this->canReimport() ? 'completed' : '']);
-    }
-
-    /**
-     * Run import process
-     *
-     * @return void
-     */
-    public function process()
-    {
-        $rule = new ImportFileRule();
-        $rule->bootImport($this);
-        $rule->import($this);
     }
 }
