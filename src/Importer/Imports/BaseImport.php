@@ -40,32 +40,39 @@ class BaseImport
         return $this->import->getSelectOption('type')['name'] ?? 'Import';
     }
 
+    /**
+     * Runs validation for given import row
+     *
+     * @param  mixed $importRow
+     * @return void
+     */
+    public function validate(AdminModel $importRow)
+    {
+        //..
+    }
+
+    /**
+     * Runs import for given import row
+     *
+     * @param  mixed $importRow
+     * @return void
+     */
     public function import(AdminModel $importRow)
     {
         //..
     }
 
+    /**
+     * Prepares rows for import
+     *
+     * @return void
+     */
     public function getRows()
     {
         $rows = $this->array['rows'];
 
-        $rows = $this->cleanRows($rows);
-
         $rows = $this->castRows($rows);
 
         return collect($rows);
-    }
-
-    private function cleanRows($rows)
-    {
-        $columns = $this->getFinalColumns();
-
-        foreach ($rows as $k => $row) {
-            $row = array_intersect_key($row, $columns);
-
-            $rows[$k] = $row;
-        }
-
-        return $rows;
     }
 }

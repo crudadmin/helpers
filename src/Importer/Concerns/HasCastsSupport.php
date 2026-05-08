@@ -8,6 +8,9 @@ trait HasCastsSupport
     {
         $casts = $this->getCasts();
 
+        // Clean rows to only include columns that are in the final columns.
+        $rows = $this->cleanRows($rows);
+
         foreach ($rows as &$row) {
             foreach ($row as $key => $value) {
                 $cast = $casts[$key]['cast'] ?? null;
@@ -43,5 +46,18 @@ trait HasCastsSupport
         }
 
         return $value;
+    }
+
+    private function cleanRows($rows)
+    {
+        $columns = $this->getFinalColumns();
+
+        foreach ($rows as $k => $row) {
+            $row = array_intersect_key($row, $columns);
+
+            $rows[$k] = $row;
+        }
+
+        return $rows;
     }
 }

@@ -30,10 +30,13 @@ trait HasImportProcess
         $this->prepareImport();
 
         try {
-            $this->importer = $this->loadImporter();
+            $this->importer = $this->getImporter();
 
             $this->importer->checkColumnsAvaiability();
             $this->importer->checkColumnsFormat();
+
+            // Runs user validation for given import row
+            $this->importer->validate($this);
 
             // Set validated flag to true
             $this->validated = true;
