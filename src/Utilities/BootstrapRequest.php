@@ -4,10 +4,12 @@ namespace AdminHelpers\Utilities;
 
 use AdminHelpers\Auth\Utilities\AuthResponse;
 use AdminHelpers\Utilities\Concerns\HasBootstrapCache;
+use AdminHelpers\Utilities\Concerns\HasBuildVersion;
 
 class BootstrapRequest
 {
-    use HasBootstrapCache;
+    use HasBootstrapCache,
+        HasBuildVersion;
 
     /**
      * Authentication token
