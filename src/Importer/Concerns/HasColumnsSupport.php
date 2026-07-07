@@ -60,7 +60,7 @@ trait HasColumnsSupport
                     }
                 }
 
-                if ( ($column['required'] ?? false) === true && (is_null($value) || $value == '') ) {
+                if ( ($column['required'] ?? false) === true && ($column['nullable'] ?? false) === false && (is_null($value) || $value == '') ) {
                     $errors[] = 'Riadok č.'.$index.' - '.$key.' (prázdna hodnota)';
                 }
             }
@@ -80,7 +80,7 @@ trait HasColumnsSupport
 
         foreach ($columns as $columnSheetKey => $column) {
             //If is not required, skip.
-            if ( ($column['required'] ?? false) === false && ($column['present'] ?? false) === false ){
+            if ( ($column['required'] ?? false) === false ){
                 continue;
             }
 
