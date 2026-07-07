@@ -80,7 +80,7 @@ trait HasColumnsSupport
 
         foreach ($columns as $columnSheetKey => $column) {
             //If is not required, skip.
-            if ( ($column['required'] ?? false) === false ){
+            if ( ($column['required'] ?? false) === false && ($column['present'] ?? false) === false ){
                 continue;
             }
 
