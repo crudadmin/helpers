@@ -16,11 +16,12 @@ trait HasImportProcess
     private $validated = false;
 
     /**
-     * Boots import rule and tries to validate it.
+     * * Boots import rule and tries to validate it.
      *
+     * @param  mixed $exception
      * @return void
      */
-    public function validate()
+    public function validate($exception = false)
     {
         if ( $this->validated ) {
             return $this;
@@ -45,7 +46,11 @@ trait HasImportProcess
 
             report($e);
 
-            throw $e;
+            if ( $exception ) {
+                throw $e;
+            } else {
+                autoAjax()->throw($e, 422);
+            }
         }
 
         return $this;
