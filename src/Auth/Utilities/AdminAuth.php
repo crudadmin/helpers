@@ -7,6 +7,8 @@ use AdminHelpers\Auth\Controllers\OTPController;
 use AdminHelpers\Auth\Controllers\LoginController;
 use AdminHelpers\Auth\Controllers\RegisterController;
 use AdminHelpers\Auth\Controllers\OAuthController;
+use AdminHelpers\Auth\Controllers\IdentifierController;
+use AdminHelpers\Auth\Middleware\FixPhoneNumber;
 
 class AdminAuth
 {
@@ -101,6 +103,27 @@ class AdminAuth
         // OTP throttle on sending code
         $this->otpMiddleware(function () use ($controller) {
             Route::post('auth/register/otp', [$controller, 'registerOTP']);
+        });
+    }
+
+    /**
+     * Change of identifier (email / phone) routes with OTP verification.
+     * Must be registered inside an authenticated route group.
+     *
+     * @param  $controller
+     *
+     * @return void
+     */
+    public function changeIdentifier($controller = IdentifierController::class)
+    {
+        $this->middleware(function () use ($controller) {
+            Route::post('auth/identifier/verify', [$controller, 'verifyOtp']);
+        });
+
+        // OTP throttle on sending code. Verificator (email/phone) is passed in the
+        // request, phone numbers are normalized into the international format.
+        $this->otpMiddleware(function () use ($controller) {
+            Route::post('auth/identifier/otp', [$controller, 'sendOtp'])->middleware(FixPhoneNumber::class);
         });
     }
 
