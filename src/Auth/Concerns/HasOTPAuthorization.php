@@ -11,20 +11,19 @@ trait HasOTPAuthorization
 
     public function resend()
     {
-        //Check if old OTP exists
+        //Check if old OTP exists. Prefer the token id, because the identifier
+        //may be returned masked (row bound tokens) and would not match anymore.
         $oldToken = otpModel()
-                        // Find by identifier
-                        ->where('identifier', request('identifier', '-'))
-                        // Find by exact OTP
                         ->when(request('id'), function($query, $id){
                             return $query->where($query->qualifyColumn('id'), $id);
+                        }, function($query){
+                            return $query->where('identifier', request('identifier', '-'));
                         })
                         ->firstOrFail();
 
-        $token = $oldToken->replicateToken(
-            // Ability to toggle verificator during resend OTP request
-            $this->verificatorTogglerParams($oldToken)
-        )->sendToken();
+        $switchedParams = $this->verificatorTogglerParams($oldToken);
+
+        $token = $oldToken->replicateToken($switchedParams)->sendToken();
 
         return $this->tokenSendResponse($token);
     }

@@ -2,8 +2,6 @@
 
 namespace AdminHelpers\Auth\Concerns;
 
-use Admin;
-
 trait HasVerificators
 {
     /**
@@ -56,6 +54,8 @@ trait HasVerificators
             // switched token can never point to a foreign account.
             'table' => $oldToken->table,
             'row_id' => $oldToken->row_id,
+            // Hide toggled identifier
+            'masked' => true,
         ];
     }
 
@@ -72,10 +72,8 @@ trait HasVerificators
         // MUST be taken from that trusted row, never from the request - otherwise an
         // attacker knowing the victim's identifier could redirect the victim's OTP
         // to his own contact and take over the account.
-        if ( $oldToken->table && $oldToken->row_id ) {
-            $row = Admin::getModelByTable($oldToken->table)?->find($oldToken->row_id);
-
-            return $row?->getAttribute($verificator) ?: null;
+        if ( $row = $oldToken->parentable ) {
+            return $row->getAttribute($verificator) ?: null;
         }
 
         // Token is not bound to any row yet (eg. registration). The destination is

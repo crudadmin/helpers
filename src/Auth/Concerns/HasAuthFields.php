@@ -97,7 +97,7 @@ trait HasAuthFields
         }
 
         //Search by any fields defined in $searchBy array dynamically
-        if ( ($identifier = ($params['identifier'] ?? null)) && count($this->getModelCasts($query)) > 0 ) {
+        else if ( ($identifier = ($params['identifier'] ?? null)) && count($this->getModelCasts($query)) > 0 ) {
             $this->findUserByIdentifier($query, $identifier);
         }
 

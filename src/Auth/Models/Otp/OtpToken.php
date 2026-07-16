@@ -3,13 +3,17 @@
 namespace AdminHelpers\Auth\Models\Otp;
 
 use Mail;
+use Admin;
 use Exception;
 use Admin\Helpers\SmartSms;
 use Admin\Eloquent\AdminModel;
 use AdminHelpers\Auth\Mail\OTPMail;
+use AdminHelpers\Auth\Concerns\HasMaskedIdentifier;
 
 class OtpToken extends AdminModel
 {
+    use HasMaskedIdentifier;
+
     /*
      * Model created date, for ordering tables in database and in user interface
      */
@@ -30,7 +34,8 @@ class OtpToken extends AdminModel
     protected $active = false;
     public $timestamps = false;
 
-    private $unecryptedToken;
+    // Raw token
+    private $unecryptedToken = null;
 
     public $casts = [
         'row_id' => 'integer',
@@ -52,15 +57,40 @@ class OtpToken extends AdminModel
             'token' => 'name:Token|max:64|index|required',
             'format' => 'name:Format|type:string|max:10|required',
             'valid_to' => 'name:Valid to|type:datetime|required',
+            'masked' => 'name:Hidden identifier|type:checkbox|default:0',
             'created_at' => 'name:Created|type:datetime|default:CURRENT_TIMESTAMP',
         ];
     }
 
+    /**
+     * Returns the model row this token is bound to (based on table + row_id).
+     * Crudadmin stores the table name in `table`, so we resolve it by table
+     * instead of a native polymorphic relation (which expects a morph alias).
+     *
+     * @return \Admin\Eloquent\AdminModel|null
+     */
+    public function getParentableAttribute()
+    {
+        if ( !($table = $this->getAttribute('table')) || !$this->row_id ) {
+            return null;
+        }
+
+        return Admin::getModelByTable($table)?->find($this->row_id);
+    }
+
     public function setTokenResponse()
     {
-        return $this->only([
+        $data = $this->only([
             'id', 'verificator', 'identifier', 'row_id', 'valid_to', 'format', 'length', 'created_at'
         ]);
+
+        // Row bound tokens (eg. login) carry an identifier derived from the account.
+        // Mask it, so we don't leak the account's e-mail/phone to the requester.
+        if ( $this->row_id && $this->masked === true ) {
+            $data['identifier'] = $this->getMaskedIdentifier();
+        }
+
+        return $data;
     }
 
     /**
@@ -96,6 +126,8 @@ class OtpToken extends AdminModel
     public function setUnecryptedToken($token)
     {
         $this->unecryptedToken = $token;
+
+        return $this;
     }
 
     public function getUnecryptedToken($force = false)
