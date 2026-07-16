@@ -21,7 +21,10 @@ trait HasOTPAuthorization
                         })
                         ->firstOrFail();
 
-        $token = $oldToken->replicateToken()->sendToken();
+        $token = $oldToken->replicateToken(
+            // Ability to toggle verificator during resend OTP request
+            $this->verificatorTogglerParams($oldToken->verificator)
+        )->sendToken();
 
         return $this->tokenSendResponse($token);
     }

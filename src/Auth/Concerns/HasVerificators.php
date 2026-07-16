@@ -21,4 +21,22 @@ trait HasVerificators
 
         return $verificator;
     }
+
+    /**
+     * Abilility to toggle verificator during resend OTP request
+     *
+     * @param  mixed $oldVerificator
+     * @return void
+     */
+    public function verificatorTogglerParams($oldVerificator)
+    {
+        if ( $oldVerificator != ($verificator = $this->getVerificator()) && request()->has($verificator) ) {
+            return [
+                'verificator' => $verificator,
+                'identifier' => request($verificator),
+            ];
+        }
+
+        return [];
+    }
 }

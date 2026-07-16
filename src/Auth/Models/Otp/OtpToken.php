@@ -176,9 +176,9 @@ class OtpToken extends AdminModel
         return $this;
     }
 
-    public function replicateToken()
+    public function replicateToken($params = [])
     {
-        $newToken = $this->replicate();
+        $newToken = $this->replicate()->fill($params);
 
         $durationOfOldTokenInMinutes = ($this->created_at)->diffInMinutes($this->valid_to);
 
