@@ -33,7 +33,12 @@ trait HasVerificators
     public function verificatorTogglerParams($oldToken)
     {
         // No verificator switch has been requested
-        if ( $oldToken->verificator == ($verificator = $this->getVerificator()) ) {
+        if ( request()->has('verificator') === false ) {
+            return [];
+        }
+
+        // Verificator is the same as the one used to create the token
+        if ( ($oldToken->verificator == ($verificator = $this->getVerificator() )) ) {
             return [];
         }
 
