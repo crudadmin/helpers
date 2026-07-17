@@ -3,6 +3,7 @@
 namespace AdminHelpers\Notifications\Providers;
 
 use Admin\Providers\AdminHelperServiceProvider;
+use Illuminate\Support\Facades\Schedule;
 use Admin;
 
 class NotificationsServiceProvider extends AdminHelperServiceProvider
@@ -41,7 +42,13 @@ class NotificationsServiceProvider extends AdminHelperServiceProvider
 
         $this->commands([
             \AdminHelpers\Notifications\Commands\SendNotificationsCommand::class,
+            \AdminHelpers\Notifications\Commands\DeleteOldNotificationsCommand::class,
         ]);
+
+        //Regularly delete old notifications, by default every night at 2:00.
+        Schedule::command('app:notifications:cleanup')
+            ->dailyAt(config('admin_helpers.notifications.cleanup.schedule_at', '02:00'))
+            ->onOneServer();
 
         $this->app['config']->set('logging.channels.notification', [
             'driver' => 'single',

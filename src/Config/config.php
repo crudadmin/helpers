@@ -22,6 +22,15 @@ return [
         //after users read them, but not clicked on them.
         'unread_notifications_minutage' => 5,
 
+        //Automatic cleanup of old notifications.
+        'cleanup' => [
+            //Delete notifications older than given number of months.
+            'older_than_months' => 1,
+
+            //Time when the daily cleanup schedule runs (24h format).
+            'schedule_at' => '02:00',
+        ],
+
         'whitelisted_tokens' => array_filter(explode(';', env('NOTIFICATIONS_TOKENS') ?: '')),
     ],
 
