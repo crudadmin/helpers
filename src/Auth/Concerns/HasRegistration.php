@@ -127,7 +127,7 @@ trait HasRegistration
         if ( $otpCode = request('token') ){
             // If token verification passed, add verified method to model.
             if ( !($token = $this->findToken($otpCode, $identifier)) ) {
-                return autoAjax()->error(_('Prihlasovací kód nie je správny.'), 401)->throw();
+                return autoAjax()->error(_('Prihlasovací kód nie je správny.'), 403)->throw();
             }
 
             $model->addVerified($token->verificator, $identifier);
