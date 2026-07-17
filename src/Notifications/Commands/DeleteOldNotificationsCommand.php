@@ -34,7 +34,7 @@ class DeleteOldNotificationsCommand extends Command
      */
     public function handle()
     {
-        $months = (int) ($this->argument('months') ?: config('admin_helpers.notifications.cleanup.older_than_months', 1));
+        $months = (int) ($this->argument('months') ?: config('admin_helpers.notifications.cleanup.older_than_months', 3));
 
         $cutoff = now()->subMonths($months);
 

@@ -25,7 +25,7 @@ return [
         //Automatic cleanup of old notifications.
         'cleanup' => [
             //Delete notifications older than given number of months.
-            'older_than_months' => 1,
+            'older_than_months' => 3,
 
             //Time when the daily cleanup schedule runs (24h format).
             'schedule_at' => '02:00',
