@@ -29,6 +29,18 @@ return [
 
             //Time when the daily cleanup schedule runs (24h format).
             'schedule_at' => '02:00',
+
+            //Automatic cleanup of old device tokens.
+            'tokens' => [
+                //Delete invalid/unknown device tokens older than given number of months.
+                'dead_older_than_months' => 1,
+
+                //How many working tokens may be assigned to one recipient.
+                'max_per_recipient' => 10,
+
+                //How many minutes after the notifications cleanup the tokens cleanup runs.
+                'schedule_offset_minutes' => 15,
+            ],
         ],
 
         'whitelisted_tokens' => array_filter(explode(';', env('NOTIFICATIONS_TOKENS') ?: '')),

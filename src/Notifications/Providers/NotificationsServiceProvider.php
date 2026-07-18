@@ -5,6 +5,7 @@ namespace AdminHelpers\Notifications\Providers;
 use Admin\Providers\AdminHelperServiceProvider;
 use Illuminate\Support\Facades\Schedule;
 use Admin;
+use Carbon\Carbon;
 
 class NotificationsServiceProvider extends AdminHelperServiceProvider
 {
@@ -43,11 +44,21 @@ class NotificationsServiceProvider extends AdminHelperServiceProvider
         $this->commands([
             \AdminHelpers\Notifications\Commands\SendNotificationsCommand::class,
             \AdminHelpers\Notifications\Commands\DeleteOldNotificationsCommand::class,
+            \AdminHelpers\Notifications\Commands\CleanupNotificationTokensCommand::class,
         ]);
 
         //Regularly delete old notifications, by default every night at 2:00.
+        $cleanupAt = config('admin_helpers.notifications.cleanup.schedule_at', '02:00');
+
         Schedule::command('app:notifications:cleanup')
-            ->dailyAt(config('admin_helpers.notifications.cleanup.schedule_at', '02:00'))
+            ->dailyAt($cleanupAt)
+            ->onOneServer();
+
+        //Regularly delete dead device tokens, right after the notifications cleanup.
+        $offset = (int) config('admin_helpers.notifications.cleanup.tokens.schedule_offset_minutes', 15);
+
+        Schedule::command('app:notifications:cleanup-tokens')
+            ->dailyAt(Carbon::createFromFormat('H:i', $cleanupAt)->addMinutes($offset)->format('H:i'))
             ->onOneServer();
 
         $this->app['config']->set('logging.channels.notification', [
