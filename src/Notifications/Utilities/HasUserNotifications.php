@@ -28,9 +28,21 @@ trait HasUserNotifications
 
         // Do not add duplicite tokens
         if ( $token = $this->notificationTokens()->where('token', $deviceId)->first() ){
+            $update = [];
+
             //Update device token assignemt to auth session
             if ( $token->access_token_id != $accessTokenId ) {
-                $token->update([ 'access_token_id' => $accessTokenId ]);
+                $update['access_token_id'] = $accessTokenId;
+            }
+
+            //Device registered itself again, so it is reachable now. Without this
+            //reset token marked as invalid/unknown would never receive notifications again.
+            if ( $token->state != 'ok' ) {
+                $update['state'] = 'ok';
+            }
+
+            if ( count($update) ) {
+                $token->update($update);
             }
 
             return;
