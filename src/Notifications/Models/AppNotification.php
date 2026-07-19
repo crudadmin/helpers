@@ -68,7 +68,7 @@ class AppNotification extends AdminModel
             'data' => 'name:Data|type:json',
             'sent' => 'name:Odoslaná|type:checkbox|default:0|index',
             'notify_at' => 'name:Dátum notifikácie|type:timestamp',
-            'created_at' => 'name:Dátum vytvorenia|type:timestamp|default:CURRENT_TIMESTAMP',
+            'created_at' => 'name:Dátum vytvorenia|type:timestamp|default:CURRENT_TIMESTAMP|index',
         ];
     }
 
