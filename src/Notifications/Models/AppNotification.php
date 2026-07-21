@@ -233,6 +233,18 @@ class AppNotification extends AdminModel
         return notificationsList()->keyBy('code')[$code] ?? null;
     }
 
+    /**
+     * Codes of notification types marked instant. Derived from the config, so there is
+     * no redundant per-row column — the config is the single source of truth.
+     */
+    public function getInstantCodes()
+    {
+        return notificationsList()
+            ->filter(fn($type) => ($type['instant'] ?? false) === true)
+            ->pluck('code')
+            ->all();
+    }
+
     public function getTypeAttribute()
     {
         if ( $code = $this->getByCode($this->code) ){

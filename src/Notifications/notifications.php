@@ -1,8 +1,9 @@
 <?php
 
-use AdminHelpers\Notifications\Models\NotificationsToken;
 use Admin\Eloquent\AdminModel;
 use Admin\Fields\Group;
+use AdminHelpers\Notifications\Jobs\SendNotificationJob;
+use AdminHelpers\Notifications\Models\NotificationsToken;
 
 function notificationModel()
 {
@@ -30,12 +31,17 @@ function createNotification($type, $data = [], $options = [])
     //Recipients columns
     $columns = $options['columns'] ?? [];
 
-    $code = $model->getByName($type)['code'] ?? 0;
+    $notificationType = $model->getByName($type);
+    $code = $notificationType['code'] ?? 0;
 
     // No notification should be created.
     if ( $code == 0 ){
         return;
     }
+
+    // Instant notifications (chat messages, likes, ...) are delivered immediately via
+    // the queue on creation; the rest wait for the scheduled command.
+    $isInstant = ($notificationType['instant'] ?? false) === true;
 
     $identifier = getNotificationIdentifier($options['identifier'] ?? null);
 
@@ -82,6 +88,14 @@ function createNotification($type, $data = [], $options = [])
             ...$app,
         ]);
     }
+
+    // Deliver instant notifications right away through the queue worker, instead of
+    // waiting for the scheduled command. afterCommit, so the row is visible to the worker.
+    if ( $isInstant && $notification ) {
+        SendNotificationJob::dispatch($notification->getKey())->afterCommit();
+    }
+
+    return $notification;
 }
 
 function getRecipientTables()

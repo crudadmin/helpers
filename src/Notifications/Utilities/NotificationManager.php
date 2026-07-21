@@ -8,6 +8,7 @@ use AdminHelpers\Notifications\Utilities\RecipientsDevices;
 use Arr;
 use Exception;
 use Google\GuzzleClient;
+use Illuminate\Support\Facades\Cache;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\ApnsConfig;
 use Kreait\Firebase\Messaging\CloudMessage;
@@ -62,9 +63,27 @@ class NotificationManager
         $this->logChannel()->error($message);
     }
 
-    public function process()
+    public function process($instantId = null)
     {
-        $notifications = $this->getUnsentNotifications();
+        // Lock so the same notification is never delivered twice. Keyed per instant id,
+        // so instant pushes for different notifications still run in parallel; the
+        // scheduled batch (no id) uses a single shared key.
+        $lock = Cache::lock('notifications-manager-process'.($instantId ? '.'.$instantId : ''), 60);
+
+        if ( !$lock->get() ) {
+            return;
+        }
+
+        try {
+            $this->processLocked($instantId);
+        } finally {
+            $lock->release();
+        }
+    }
+
+    private function processLocked($instantId = null)
+    {
+        $notifications = $this->getUnsentNotifications($instantId);
 
         $this->attachDeviceTokens($notifications);
 
@@ -160,7 +179,7 @@ class NotificationManager
         }
     }
 
-    private function getUnsentNotifications()
+    private function getUnsentNotifications($instantId = null)
     {
         $table = notificationModel()->getTable();
 
@@ -179,6 +198,13 @@ class NotificationManager
                     '.$table.'.code
                 ')
                 ->where('sent', 0)
+                ->when($instantId,
+                    // Instant path: this one notification, straight from the queue.
+                    fn($query) => $query->where('id', $instantId),
+                    // Scheduled command: skip instant types, they are delivered via the
+                    // queue on creation. Derived from the config, so no per-row column.
+                    fn($query) => $query->whereNotIn('code', notificationModel()->getInstantCodes())
+                )
                 ->where('notify_at', '<=', $this->start) //Process all notification which are scheduled already
                 ->where('notify_at', '>=', now()->addHours(-12)) //Process only past 12 hours.
                 ->orderBy('id', 'ASC')
