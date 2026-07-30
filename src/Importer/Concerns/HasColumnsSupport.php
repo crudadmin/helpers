@@ -85,7 +85,7 @@ trait HasColumnsSupport
             }
 
             // Must be in header
-            if ( !array_key_exists($columnSheetKey, $this->array['header']) ){
+            if ( isset($this->array['header']) && !array_key_exists($columnSheetKey, $this->array['header']) ){
                 $errors[] = $columnSheetKey;
             }
         }
