@@ -35,16 +35,9 @@ class ImportFileRule extends AdminRule
         }
     }
 
+    // We can reimport during update. Because just row may be saved and we will be doing this logic unintentionally.
     public function updated(AdminModel $row)
     {
-        if ( $row->canImport(true) === false ) {
-            return;
-        }
-
-        try {
-            $row->process();
-        } catch (Exception|Throwable $e){
-            autoAjax()->throw($e, 422);
-        }
+        //..
     }
 }
