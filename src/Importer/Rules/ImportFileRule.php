@@ -35,9 +35,8 @@ class ImportFileRule extends AdminRule
         }
     }
 
-    // We can reimport during update. Because just row may be saved and we will be doing this logic unintentionally.
     public function updated(AdminModel $row)
     {
-        //..
+        // We can not reimport during update. Because just row may be saved and we will be doing this logic unintentionally.
     }
 }
