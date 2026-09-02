@@ -130,6 +130,14 @@ class AppNotification extends AdminModel
     /**
      * Ids of every notification the user may see, collected from the three sources.
      *
+     * The two branches that have a scope of their own go through it instead of
+     * rebuilding the condition here. A project may override those scopes to narrow what
+     * its users are allowed to see — Auttia limits non-persistent notifications to the
+     * client's own school — and a raw query would hand out every other school's too.
+     *
+     * The order scope is dropped on the way in: these are subqueries, sorting them costs
+     * time and buys nothing, the outer query does the ordering.
+     *
      * No LIMIT inside on purpose, the scope is used with paginate() as well.
      */
     private function getMyNotificationIdsQuery($user, $foreignColumn)
@@ -141,17 +149,20 @@ class AppNotification extends AdminModel
 
             //Or I am one of the recipients
             ->union(
-                DB::table((new NotificationsRecipient)->getTable())
+                (new NotificationsRecipient)->newQuery()
+                    ->withoutGlobalScope('order')
                     ->select('notification_id as id')
-                    ->where((new NotificationsRecipient)->getCurrentSelector())
+                    ->onlyMine()
+                    ->toBase()
             )
 
             //Or it is a global notification created after my registration
             ->union(
-                DB::table($this->getTable())
-                    ->select('id')
-                    ->whereIn('code', $this->getNotPersistentCodes())
-                    ->where('created_at', '>=', $user->created_at)
+                $this->newQuery()
+                    ->withoutGlobalScope('order')
+                    ->select($this->qualifyColumn('id'))
+                    ->isNotPersistent()
+                    ->toBase()
             );
     }
 
