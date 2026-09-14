@@ -26,7 +26,7 @@ class AuthServiceProvider extends AdminHelperServiceProvider
     {
         $this->registerFacades();
 
-        require __DIR__.'/../auth.php';
+        require_once __DIR__.'/../auth.php';
     }
 
     /**

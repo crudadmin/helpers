@@ -25,7 +25,7 @@ class NotificationsServiceProvider extends AdminHelperServiceProvider
             return;
         }
 
-        require __DIR__.'/../notifications.php';
+        require_once __DIR__.'/../notifications.php';
     }
 
     /**
