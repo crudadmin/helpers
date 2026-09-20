@@ -2,39 +2,26 @@
 
 namespace AdminHelpers\Utilities;
 
+use Admin\Core\Utilities\BootstrapRequest as BaseBootstrapRequest;
 use AdminHelpers\Auth\Utilities\AuthResponse;
-use AdminHelpers\Utilities\Concerns\HasBootstrapCache;
 use AdminHelpers\Utilities\Concerns\HasBuildVersion;
 
-class BootstrapRequest
+class BootstrapRequest extends BaseBootstrapRequest
 {
-    use HasBootstrapCache,
-        HasBuildVersion;
+    use HasBuildVersion;
 
     /**
-     * Authentication token
+     * Authentication token.
      */
     public $token;
 
     /**
-     * Logged client/user
+     * Logged client/user.
      */
     public $client;
 
     /**
-     * Called methods, to not return duplicate objects.
-     */
-    private $called = [];
-
-    /**
-     * which stores should be returned to the authenticated user
-     *
-     * @var array
-     */
-    protected $authenticated = [];
-
-    /**
-     * __construct
+     * __construct.
      *
      * @return void
      */
@@ -44,7 +31,7 @@ class BootstrapRequest
     }
 
     /**
-     * Set logged client into object
+     * Set logged client into object.
      *
      * @return void
      */
@@ -53,16 +40,15 @@ class BootstrapRequest
         // Fallback for client() function on old projects
         $this->client = function_exists('client') ? client() : auth()->user();
 
-        if ( $this->client ) {
+        if ($this->client) {
             $this->onClient($this->client);
         }
     }
 
     /**
-     * Set authentication token into object
+     * Set authentication token into object.
      *
-     * @param string $token
-     *
+     * @param  string  $token
      * @return self
      */
     public function setToken($token)
@@ -73,7 +59,7 @@ class BootstrapRequest
     }
 
     /**
-     * Check if the client is authorized
+     * Check if the client is authorized.
      *
      * @return bool
      */
@@ -83,39 +69,9 @@ class BootstrapRequest
     }
 
     /**
-     * Global shared data
+     * Auth user data.
      *
-     * @return  array
-     */
-    public function get()
-    {
-        return [];
-    }
-
-    /**
-     * Data only for guests
-     *
-     * @return  array
-     */
-    public function guest()
-    {
-        return [];
-    }
-
-    /**
-     * Data only for authorized user
-     *
-     * @return  array
-     */
-    public function authenticated()
-    {
-        return $this->only($this->authenticated);
-    }
-
-    /**
-     * Auth user data
-     *
-     * @return  array
+     * @return array
      */
     public function auth()
     {
@@ -123,102 +79,9 @@ class BootstrapRequest
     }
 
     /**
-     * Returns all available data
+     * Determine what to do when client is set.
      *
-     * @return  array
-     */
-    public function all()
-    {
-        $isAuthorized = $this->isAuthorized();
-
-        $parts = ['get'];
-
-        if ( $isAuthorized ) {
-            $parts[] = 'authenticated';
-        } else {
-            $parts[] = 'guest';
-        }
-
-        return $this->only($parts, false);
-    }
-
-    /**
-     * Returns only given subset of data
-     *
-     * @param  array  $parts
-     * @param  bool  $passKeys
-     *
-     * @return  array
-     */
-    public function only($parts, $passKey = true)
-    {
-        $parts = array_wrap($parts);
-
-        if ( count($parts) == 0 ){
-            return $this->all();
-        }
-
-        $data = [];
-
-        foreach ($parts as $keyOrMethod => $methodOrParams) {
-            $method = is_numeric($keyOrMethod) ? $methodOrParams : $keyOrMethod;
-            $params = is_numeric($keyOrMethod) ? [] : $methodOrParams;
-
-            // Check if method is athorized for current request
-            if ( $this->isAuthorized() === false && in_array($method, $this->authenticated) ) {
-                abort(403, 'You can not load this resource.');
-            }
-
-            // Check that each method is called only once
-            if ( in_array($method, $this->called) ){
-                continue;
-            }
-
-            // Check if method exists and is callable
-            if ( method_exists($this, $method) ){
-                $value = $this->getCachedResponse($method, $params);
-
-                $data[] = $passKey ? [$method => $value] : $value;
-
-                $this->called[] = $method;
-            }
-        }
-
-        return $this->mergeRecursively($data);
-    }
-
-    /**
-     * Merge recursively given data parts
-     *
-     * @param  array  $parts
-     *
-     * @return  array
-     */
-    private function mergeRecursively($parts)
-    {
-        $data = [];
-
-        //Merge arrays recursively
-        foreach ($parts as $part) {
-            foreach ($part as $key => $value) {
-                //Merge two array
-                if ( isset($data[$key]) && is_array($data[$key]) && is_array($value) ) {
-                    $data[$key] = array_merge($data[$key], $value);
-                } else {
-                    $data[$key] = $value;
-                }
-            }
-        }
-
-        return $data;
-    }
-
-
-    /**
-     * Determine what to do when client is set
-     *
-     * @param  mixed $client
-     *
+     * @param  mixed  $client
      * @return void
      */
     public function onClient($client)

@@ -11,13 +11,14 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Marek Gogoľ",
+            "name": "Marek Gogo\u013e",
             "email": "info@marekgogol.sk"
         }
     ],
     "require": {
         "php": ">=8.3.0",
-        "crudadmin/crudadmin": "^6.0|dev-6.0-dev|^4.0|^5.0|dev-master|dev-5.0-dev"
+        "crudadmin/crudadmin": "^6.0|dev-6.0-dev",
+        "crudadmin/framework": "^6.0.1|dev-6.0-dev"
     },
     "autoload": {
         "psr-4": {
@@ -30,5 +31,7 @@
                 "AdminHelpers\\Providers\\AppServiceProvider"
             ]
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
