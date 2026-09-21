@@ -8,6 +8,7 @@ use AdminHelpers\Auth\Providers\AuthServiceProvider;
 use AdminHelpers\Shared\Middleware\AuthOptionalMiddleware;
 use AdminHelpers\Importer\Providers\ImporterServiceProvider;
 use AdminHelpers\Notifications\Providers\NotificationsServiceProvider;
+use AdminHelpers\Sms\SmsServiceProvider;
 
 class AppServiceProvider extends AdminHelperServiceProvider
 {
@@ -17,6 +18,7 @@ class AppServiceProvider extends AdminHelperServiceProvider
         AuthServiceProvider::class,
         SessionServiceProvider::class,
         ImporterServiceProvider::class,
+        SmsServiceProvider::class,
     ];
 
     protected $facades = [];

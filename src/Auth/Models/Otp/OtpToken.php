@@ -5,7 +5,7 @@ namespace AdminHelpers\Auth\Models\Otp;
 use Mail;
 use Admin;
 use Exception;
-use Admin\Helpers\SmartSms;
+use AdminHelpers\Sms\SmartSms;
 use Admin\Eloquent\AdminModel;
 use AdminHelpers\Auth\Mail\OTPMail;
 use AdminHelpers\Auth\Concerns\HasMaskedIdentifier;
