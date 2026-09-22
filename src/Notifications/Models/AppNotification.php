@@ -6,6 +6,7 @@ use AdminHelpers\Notifications\Models\NotificationsRecipient;
 use Illuminate\Support\Facades\DB;
 use Admin\Eloquent\AdminModel;
 use Admin\Fields\Group;
+use Illuminate\Support\Arr;
 
 class AppNotification extends AdminModel
 {
@@ -340,7 +341,7 @@ class AppNotification extends AdminModel
             $match = $matches[1][$i];
             $match = str_replace('#', '', $match); //Trim bolds
 
-            $value = array_get($data, $match) ?: '-';
+            $value = Arr::get($data, $match) ?: '-';
 
             $text = str_replace($wrapper, $value, $text);
         }

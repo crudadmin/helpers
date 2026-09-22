@@ -5,6 +5,7 @@ namespace AdminHelpers\Auth\Controllers;
 use Illuminate\Http\Request;
 use AdminHelpers\Auth\Concerns\HasOAuth;
 use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Str;
 
 class OAuthController extends Controller
 {
@@ -21,7 +22,7 @@ class OAuthController extends Controller
     {
         $this->checkApp($request->client_id);
 
-        $code = strtolower(str_random(20));
+        $code = strtolower(Str::random(20));
 
         $this->saveAuthorizationRequest($code, $request);
 

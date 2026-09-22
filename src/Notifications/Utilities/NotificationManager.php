@@ -262,7 +262,7 @@ class NotificationManager
 
     private function throwAwayInvalidTokens($targets)
     {
-        return array_values(array_unique(array_filter(array_wrap($targets), function($token){
+        return array_values(array_unique(array_filter(Arr::wrap($targets), function($token){
             if ( in_array($token, $this->invalidTokens) ){
                 return false;
             }

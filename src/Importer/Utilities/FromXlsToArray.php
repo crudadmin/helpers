@@ -4,6 +4,7 @@ namespace AdminHelpers\Importer\Utilities;
 
 use Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Str;
 
 class FromXlsToArray
 {
@@ -92,7 +93,7 @@ class FromXlsToArray
     {
         $string = preg_replace("/{\s| |\.|\-|\_}/", '-', $string);
         $string = mb_strtolower($string);
-        $string = str_slug($string);
+        $string = Str::slug($string);
         $string = str_replace('-', '_', $string);
 
         return $string;

@@ -3,6 +3,7 @@
 namespace AdminHelpers\Notifications\Utilities;
 
 use AdminHelpers\Notifications\Models\NotificationsToken;
+use Illuminate\Support\Arr;
 
 trait HasUserNotifications
 {
@@ -78,7 +79,7 @@ trait HasUserNotifications
     {
         $data = $this->notifications ?: [];
 
-        foreach (array_wrap($value) as $key => $state) {
+        foreach (Arr::wrap($value) as $key => $state) {
             $data[$key] = $state == 'true' || $state == 1 ? true : false;
         }
 

@@ -9,6 +9,7 @@ use AdminHelpers\Sms\SmartSms;
 use Admin\Eloquent\AdminModel;
 use AdminHelpers\Auth\Mail\OTPMail;
 use AdminHelpers\Auth\Concerns\HasMaskedIdentifier;
+use Illuminate\Support\Str;
 
 class OtpToken extends AdminModel
 {
@@ -149,7 +150,7 @@ class OtpToken extends AdminModel
     {
         $numbersGenerated = implode('', array_map(fn() => rand(0, 9), array_fill(0, $numbers, 1)));
 
-        return strtoupper(str_random($chars).str_pad($numbersGenerated, $numbers, '0'));
+        return strtoupper(Str::random($chars).str_pad($numbersGenerated, $numbers, '0'));
     }
 
     public function hashToken($token)

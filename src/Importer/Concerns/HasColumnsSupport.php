@@ -4,6 +4,7 @@ namespace AdminHelpers\Importer\Concerns;
 
 use AdminHelpers\Importer\Concerns\FormattingError;
 use AdminHelpers\Importer\Utilities\FromXlsToArray;
+use Illuminate\Support\Arr;
 
 trait HasColumnsSupport
 {
@@ -51,7 +52,7 @@ trait HasColumnsSupport
                 $value = $row[$key] ?? null;
 
                 if ( !$this->isEmpty($value) && isset($column['format']) ) {
-                    $formats = array_wrap($column['format']);
+                    $formats = Arr::wrap($column['format']);
 
                     foreach ($formats as $format) {
                         if ( $this->{'isValid'.$format}($value, $row) === false ) {
