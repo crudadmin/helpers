@@ -34,7 +34,19 @@ trait HasResponse
         return autoAjax()
             ->success(_('Boli ste úspešne prihlásený.'))
             ->data(
-                (new AuthResponse($user, $type))->toArray()
+                (new AuthResponse($user, $type, abilities: $this->tokenAbilities($user)))->toArray()
             );
+    }
+
+    /**
+     * Sanctum abilities of the token created on login. Controllers may limit them, e.g. by a request parameter.
+     *
+     * @param  mixed $user
+     *
+     * @return array
+     */
+    protected function tokenAbilities($user)
+    {
+        return ['*'];
     }
 }

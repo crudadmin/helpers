@@ -12,11 +12,13 @@ class AuthResponse implements Arrayable
      * @param  mixed $user
      * @param  string $tokenName
      * @param  string $userResponse
+     * @param  array $abilities  sanctum abilities of the created token
      */
     public function __construct(
         public $user,
         public $tokenName = 'default',
         public $userResponse = 'setAuthResponse',
+        public array $abilities = ['*'],
     ) {}
 
     /**
@@ -38,11 +40,12 @@ class AuthResponse implements Arrayable
 
         //We does not want create token if false has been given
         if ( $this->tokenName ) {
-            $token = $this->user->createToken($this->tokenName);
+            $token = $this->user->createToken($this->tokenName, $this->abilities);
 
             $data['token'] = [
                 'token' => $token->plainTextToken,
                 'expiration' => null,
+                'abilities' => $token->accessToken->abilities,
             ];
         }
 
