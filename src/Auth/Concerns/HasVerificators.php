@@ -52,7 +52,7 @@ trait HasVerificators
             'identifier' => $identifier,
             // Keep the token bound to the very same owner row (or unbound), so a
             // switched token can never point to a foreign account.
-            'table' => $oldToken->table,
+            'table' => $oldToken->getAttribute('table'),
             'row_id' => $oldToken->row_id,
             // Hide toggled identifier
             'masked' => true,

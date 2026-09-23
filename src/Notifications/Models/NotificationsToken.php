@@ -13,6 +13,9 @@ class NotificationsToken extends AdminModel
      */
     protected $migration_date = '2024-11-28 17:31:15';
 
+    // The column collides with the Eloquent property, its value is read with getAttribute()
+    protected $ignoredReservedColumns = ['table'];
+
     /*
      * Template name
      */

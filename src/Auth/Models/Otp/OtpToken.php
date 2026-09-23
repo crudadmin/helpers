@@ -20,6 +20,9 @@ class OtpToken extends AdminModel
      */
     protected $migration_date = '2024-03-19 12:34:46';
 
+    // The column collides with the Eloquent property, its value is read with getAttribute()
+    protected $ignoredReservedColumns = ['table'];
+
     /*
      * Template name
      */
