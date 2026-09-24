@@ -29,7 +29,9 @@ class NotificationsToken extends AdminModel
 
     protected $group = 'settings';
 
-    protected $icon = 'fa-send';
+    protected $settings = [
+        'icon' => 'fa-send',
+    ];
 
     protected $buttons = [
         EnableDebugNotificationToken::class,

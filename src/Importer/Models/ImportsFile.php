@@ -32,13 +32,12 @@ class ImportsFile extends AdminModel
      */
     protected $title = '';
 
-    protected $icon = 'fa-upload';
-
     protected $publishable = false;
 
     protected $sortable = false;
 
     protected $settings = [
+        'icon' => 'fa-upload',
         'increments' => false,
         'grid' => ['big', 'half', 'full'],
         'buttons.create' => 'Nový import',

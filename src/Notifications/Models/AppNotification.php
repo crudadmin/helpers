@@ -35,7 +35,9 @@ class AppNotification extends AdminModel
 
     protected $sortable = false;
 
-    protected $icon = 'fa-bell';
+    protected $settings = [
+        'icon' => 'fa-bell',
+    ];
 
     public $timestamps = false;
 

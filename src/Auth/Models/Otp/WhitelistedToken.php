@@ -33,7 +33,9 @@ class WhitelistedToken extends AdminModel
 
     protected $group = 'settings';
 
-    protected $icon = 'fa-lock';
+    protected $settings = [
+        'icon' => 'fa-lock',
+    ];
 
     protected $sortable = false;
 

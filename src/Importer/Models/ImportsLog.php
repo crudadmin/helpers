@@ -23,8 +23,6 @@ class ImportsLog extends AdminModel
      */
     protected $title = '';
 
-    protected $icon = 'fa-exclamation-triangle';
-
     protected $publishable = false;
 
     protected $sortable = false;
@@ -34,6 +32,7 @@ class ImportsLog extends AdminModel
     protected $active = false;
 
     protected $settings = [
+        'icon' => 'fa-exclamation-triangle',
         'title.insert' => 'Nové hlásenie',
     ];
 
