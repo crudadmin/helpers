@@ -38,12 +38,12 @@ class ImportsFile extends AdminModel
 
     protected $settings = [
         'icon' => 'fa-upload',
-        'increments' => false,
-        'grid' => ['big', 'half', 'full'],
+        'table.increments' => false,
         'buttons.create' => 'Nový import',
-        'title.insert' => 'Nahrajte importný súbor',
+        'title.create' => 'Nahrajte importný súbor',
         'title.update' => ':name',
         'columns.last_import.name' => 'Posledný import',
+        'grid.sizes' => ['big', 'half', 'full'],
     ];
 
     protected $rules = [

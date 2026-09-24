@@ -33,7 +33,7 @@ class ImportsLog extends AdminModel
 
     protected $settings = [
         'icon' => 'fa-exclamation-triangle',
-        'title.insert' => 'Nové hlásenie',
+        'title.create' => 'Nové hlásenie',
     ];
 
     public $timestamps = false;
