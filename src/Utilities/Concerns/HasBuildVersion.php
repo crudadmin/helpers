@@ -14,9 +14,9 @@ trait HasBuildVersion
      */
     public function getBundlePath()
     {
-        if ( $basepath = env('NUXT_PATH') ) {
+        if ( $basepath = config('admin_helpers.bundle.nuxt_path') ) {
             return $basepath.'/.nuxt/dist/client';
-        } else if ( $basepath = env('IONIC_PATH') ) {
+        } else if ( $basepath = config('admin_helpers.bundle.ionic_path') ) {
             return $basepath.'/dist';
         }
     }

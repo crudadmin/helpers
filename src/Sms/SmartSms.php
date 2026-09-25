@@ -22,11 +22,7 @@ class SmartSms
     {
         $config = config('smartsms', [
             'log_channel' => config('logging.channels.sms') ? 'sms' : 'single',
-            'from' => env('SMARTSMS_FROM', true),
-            'test' => env('SMARTSMS_TEST', true),
-            'username' => env('SMARTSMS_USERNAME'),
-            'password' => env('SMARTSMS_PASSWORD_MD5') ?: md5(env('SMARTSMS_PASSWORD')),
-        ]);
+        ] + config('admin_helpers.smartsms', []));
 
         if ($key) {
             return Arr::get($config, $key);

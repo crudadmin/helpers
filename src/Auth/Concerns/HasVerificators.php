@@ -11,7 +11,7 @@ trait HasVerificators
      */
     public function getVerificator($user = null)
     {
-        $defaultVerificator = env('AUTH_VERIFICATOR', 'email');
+        $defaultVerificator = config('admin_helpers.auth.verificator', 'email');
         $verificator = request('verificator', $defaultVerificator);
 
         // If verificator is switched to SMS mode, but no phone number is present, then use email.

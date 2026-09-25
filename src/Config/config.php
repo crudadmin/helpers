@@ -46,7 +46,24 @@ return [
         'whitelisted_tokens' => array_filter(explode(';', env('NOTIFICATIONS_TOKENS') ?: '')),
     ],
 
+    // Paths of the client app, its build version is read from the bundle
+    'bundle' => [
+        'nuxt_path' => env('NUXT_PATH'),
+        'ionic_path' => env('IONIC_PATH'),
+    ],
+
+    // SmartSms credentials, config/smartsms.php of the project wins
+    'smartsms' => [
+        'from' => env('SMARTSMS_FROM', true),
+        'test' => env('SMARTSMS_TEST', true),
+        'username' => env('SMARTSMS_USERNAME'),
+        'password' => env('SMARTSMS_PASSWORD_MD5') ?: md5((string) env('SMARTSMS_PASSWORD')),
+    ],
+
     'auth' => [
+        // Default verificator, email or phone
+        'verificator' => env('AUTH_VERIFICATOR', 'email'),
+
         'oauth' => [
             // Registered Oauth app ids
             'apps' => [
