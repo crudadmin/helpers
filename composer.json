@@ -20,9 +20,18 @@
         "crudadmin/crudadmin": "^6.0|dev-6.0-dev",
         "crudadmin/framework": "^6.0.1|dev-6.0-dev"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^12.5",
+        "orchestra/testbench": "^11.2"
+    },
     "autoload": {
         "psr-4": {
             "AdminHelpers\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AdminHelpers\\Tests\\": "tests"
         }
     },
     "extra": {
@@ -33,5 +42,31 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts": {
+        "test": "phpunit"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../admin/dependencies/crudadmin",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../admin/dependencies/framework",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../admin/dependencies/resources",
+            "options": {
+                "symlink": true
+            }
+        }
+    ]
 }
