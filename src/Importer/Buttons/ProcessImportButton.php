@@ -24,7 +24,7 @@ class ProcessImportButton extends Button
 
     /**
      * Here you can set your custom properties for each row
-     * @param Admin\Models\Model $row
+     * @param \Admin\Eloquent\AdminModel $row
      */
     public function __construct($row)
     {
@@ -33,7 +33,7 @@ class ProcessImportButton extends Button
 
     /**
      * Firing callback on press button
-     * @param Admin\Models\Model $row
+     * @param \Admin\Eloquent\AdminModel $row
      * @return object
      */
     public function fire(AdminModel $row)

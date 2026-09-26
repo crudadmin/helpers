@@ -8,6 +8,7 @@ if ( !function_exists('isTestEnvironment') ) {
      */
     function isTestEnvironment()
     {
-        return app()->environment(['local', 'stagging']);
+        // "stagging" is kept for projects which used the misspelled environment name
+        return app()->environment(['local', 'staging', 'stagging']);
     }
 }

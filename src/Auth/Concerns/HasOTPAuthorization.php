@@ -88,7 +88,7 @@ trait HasOTPAuthorization
         return otpModel()->where($query)->where('valid_to', '>=', now())->first();
     }
 
-    protected function createToken($identifier = null, $verificator, $durationMinutes = 15)
+    protected function createToken($identifier, $verificator, $durationMinutes = 15)
     {
         $validTo = now()->addMinutes($durationMinutes);
 

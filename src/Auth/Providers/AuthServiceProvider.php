@@ -2,19 +2,30 @@
 
 namespace AdminHelpers\Auth\Providers;
 
-use Admin;
-use Illuminate\Http\Request;
+use Admin\Providers\AdminPackageServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
-use Admin\Providers\AdminHelperServiceProvider;
 
-class AuthServiceProvider extends AdminHelperServiceProvider
+class AuthServiceProvider extends AdminPackageServiceProvider
 {
+    /**
+     * Blade views of the package, namespace => directory.
+     */
+    protected $views = [
+        'admin_helpers' => __DIR__.'/../Views',
+    ];
+
     protected $facades = [
         'AdminAuth' => [
             'facade' => \AdminHelpers\Auth\Facades\AdminAuth::class,
             'class' => ['admin.auth', \AdminHelpers\Auth\Utilities\AdminAuth::class],
         ],
+    ];
+
+    protected $commands = [
+        \AdminHelpers\Auth\Commands\CleanOtpTokens::class,
+        \AdminHelpers\Auth\Commands\FixOtpVerifiedMethods::class,
     ];
 
     /**
@@ -24,9 +35,21 @@ class AuthServiceProvider extends AdminHelperServiceProvider
      */
     public function register()
     {
-        $this->registerFacades();
+        parent::register();
 
         require_once __DIR__.'/../auth.php';
+    }
+
+    /**
+     * OTP models are registered only when the OTP authorization is enabled.
+     *
+     * @return array<string, string>
+     */
+    protected function models()
+    {
+        return hasOtpEnabled()
+            ? [__DIR__.'/../Models/Otp/**' => 'AdminHelpers\Auth\Models\Otp']
+            : [];
     }
 
     /**
@@ -36,16 +59,7 @@ class AuthServiceProvider extends AdminHelperServiceProvider
      */
     public function boot()
     {
-        if ( hasOtpEnabled() ) {
-            Admin::registerAdminModels(__dir__ . '/../Models/Otp/**', 'AdminHelpers\Auth\Models\Otp');
-        }
-
-        $this->commands([
-            \AdminHelpers\Auth\Commands\CleanOtpTokens::class,
-            \AdminHelpers\Auth\Commands\FixOtpVerifiedMethods::class,
-        ]);
-
-        $this->loadViewsFrom(__DIR__ . '/../Views', 'admin_helpers');
+        parent::boot();
 
         $this->setThrottleLimiters();
     }

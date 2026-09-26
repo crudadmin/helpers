@@ -32,7 +32,7 @@ class CleanSessionsCommand extends Command
 
         $this->info('Pruning expired sessions older than ' . $minutes . ' minutes...');
 
-        $this->info($message = 'Pruned ' . $session->driver()->getHandler()->gc($minutes) . ' sessions older than ' . $minutes . ' minutes.');
+        $this->info($message = 'Pruned ' . $session->driver()->getHandler()->gc($minutes * 60) . ' sessions older than ' . $minutes . ' minutes.');
 
         Log::info($message);
     }

@@ -21,7 +21,7 @@ trait RecipientsDevices
         }
 
         $tokens = $this->fetchTokens($tree)->groupBy(function($token){
-            return $token->app.':'.$token->table.':'.$token->row_id;
+            return $token->app.':'.$token->getAttribute('table').':'.$token->row_id;
         });
 
         foreach ($notifications as $notification) {
@@ -140,7 +140,7 @@ trait RecipientsDevices
         // Enable send only to whitelisted tokens
         if ( isTestEnvironment() ) {
             $whitelistedTokens = array_merge(
-                config('notifications.whitelisted_tokens', []),
+                config('admin_helpers.notifications.whitelisted_tokens', []),
                 NotificationsToken::where('debug', true)->pluck('token')->toArray()
             );
 

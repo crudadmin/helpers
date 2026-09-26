@@ -28,7 +28,7 @@ class OAuthController extends Controller
 
         $name = $this->getOauthConfig($request->client_id, 'name');
 
-        $promtedUrl = action([OAuthController::class, 'oauthAuthorizeRedirect'], ['code' => $code], false);
+        $promtedUrl = action([static::class, 'oauthAuthorizeRedirect'], ['code' => $code], false);
 
         $oauthParams = '?oauth='.$name.'&redirect='.urlencode($promtedUrl);
 

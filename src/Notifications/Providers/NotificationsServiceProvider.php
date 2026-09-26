@@ -2,13 +2,28 @@
 
 namespace AdminHelpers\Notifications\Providers;
 
-use Admin\Providers\AdminHelperServiceProvider;
-use Illuminate\Support\Facades\Schedule;
-use Admin;
+use Admin\Providers\AdminPackageServiceProvider;
+use AdminHelpers\Notifications\Commands\CleanupNotificationTokensCommand;
+use AdminHelpers\Notifications\Commands\DeleteOldNotificationsCommand;
+use AdminHelpers\Notifications\Commands\SendNotificationsCommand;
 use Carbon\Carbon;
+use Illuminate\Console\Scheduling\Schedule;
 
-class NotificationsServiceProvider extends AdminHelperServiceProvider
+/**
+ * Notifications module, enabled by admin_helpers.notifications.enabled.
+ */
+class NotificationsServiceProvider extends AdminPackageServiceProvider
 {
+    protected $models = [
+        __DIR__ . '/../Models/**' => 'AdminHelpers\Notifications\Models',
+    ];
+
+    protected $commands = [
+        SendNotificationsCommand::class,
+        DeleteOldNotificationsCommand::class,
+        CleanupNotificationTokensCommand::class,
+    ];
+
     private function isEnabled()
     {
         return config('admin_helpers.notifications.enabled') === true;
@@ -25,6 +40,8 @@ class NotificationsServiceProvider extends AdminHelperServiceProvider
             return;
         }
 
+        parent::register();
+
         require_once __DIR__.'/../notifications.php';
     }
 
@@ -39,33 +56,50 @@ class NotificationsServiceProvider extends AdminHelperServiceProvider
             return;
         }
 
-        Admin::registerAdminModels(__dir__ . '/../Models/**', 'AdminHelpers\Notifications\Models');
+        parent::boot();
 
-        $this->commands([
-            \AdminHelpers\Notifications\Commands\SendNotificationsCommand::class,
-            \AdminHelpers\Notifications\Commands\DeleteOldNotificationsCommand::class,
-            \AdminHelpers\Notifications\Commands\CleanupNotificationTokensCommand::class,
-        ]);
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
+            $this->registerSchedule($schedule);
+        });
+    }
 
+    /**
+     * Add the notification channel of the log, unless the project defined its own.
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        if ( ! config()->has('logging.channels.notification') ) {
+            config()->set('logging.channels.notification', [
+                'driver' => 'single',
+                'path' => storage_path('logs/notification.log'),
+                'level' => config('logging.channels.single.level', 'debug'),
+                'replace_placeholders' => true,
+            ]);
+        }
+    }
+
+    /**
+     * Register the cleanup commands in the scheduler.
+     *
+     * @param  Schedule  $schedule
+     * @return void
+     */
+    private function registerSchedule(Schedule $schedule)
+    {
         //Regularly delete old notifications, by default every night at 2:00.
         $cleanupAt = config('admin_helpers.notifications.cleanup.schedule_at', '02:00');
 
-        Schedule::command('app:notifications:cleanup')
+        $schedule->command('app:notifications:cleanup')
             ->dailyAt($cleanupAt)
             ->onOneServer();
 
         //Regularly delete dead device tokens, right after the notifications cleanup.
         $offset = (int) config('admin_helpers.notifications.cleanup.tokens.schedule_offset_minutes', 15);
 
-        Schedule::command('app:notifications:cleanup-tokens')
+        $schedule->command('app:notifications:cleanup-tokens')
             ->dailyAt(Carbon::createFromFormat('H:i', $cleanupAt)->addMinutes($offset)->format('H:i'))
             ->onOneServer();
-
-        $this->app['config']->set('logging.channels.notification', [
-            'driver' => 'single',
-            'path' => storage_path('logs/notification.log'),
-            'level' => config('logging.channels.single.level', 'debug'),
-            'replace_placeholders' => true,
-        ]);
     }
 }

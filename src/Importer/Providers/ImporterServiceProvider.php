@@ -2,11 +2,17 @@
 
 namespace AdminHelpers\Importer\Providers;
 
-use Admin\Providers\AdminHelperServiceProvider;
-use Admin;
+use Admin\Providers\AdminPackageServiceProvider;
 
-class ImporterServiceProvider extends AdminHelperServiceProvider
+/**
+ * Importer module, enabled by admin_helpers.importer.enabled.
+ */
+class ImporterServiceProvider extends AdminPackageServiceProvider
 {
+    protected $models = [
+        __DIR__ . '/../Models/**' => 'AdminHelpers\Importer\Models',
+    ];
+
     private function isEnabled()
     {
         return config('admin_helpers.importer.enabled') === true;
@@ -19,11 +25,11 @@ class ImporterServiceProvider extends AdminHelperServiceProvider
      */
     public function register()
     {
-        // if ( $this->isEnabled() === false ) {
-        //     return;
-        // }
+        if ( $this->isEnabled() === false ) {
+            return;
+        }
 
-        // require __DIR__.'/../helpers.php';
+        parent::register();
     }
 
     /**
@@ -37,17 +43,6 @@ class ImporterServiceProvider extends AdminHelperServiceProvider
             return;
         }
 
-        Admin::registerAdminModels(__dir__ . '/../Models/**', 'AdminHelpers\Importer\Models');
-
-        // $this->commands([
-        //     \AdminHelpers\Notifications\Commands\SendNotificationsCommand::class,
-        // ]);
-
-        // $this->app['config']->set('logging.channels.notification', [
-        //     'driver' => 'single',
-        //     'path' => storage_path('logs/notification.log'),
-        //     'level' => env('LOG_LEVEL', 'debug'),
-        //     'replace_placeholders' => true,
-        // ]);
+        parent::boot();
     }
 }

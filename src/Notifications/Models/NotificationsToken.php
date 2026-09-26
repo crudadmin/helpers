@@ -55,7 +55,7 @@ class NotificationsToken extends AdminModel
             Group::fields([
                 'app' => 'name:Aplikácia|type:select|options:'.implode(',', $apps).'|default:'.($apps[0] ?? '').'|enum|required',
             ])->if(hasAppsSupport()),
-            'platform' => 'name:Platforma|type:select|options:'.implode(',', config('admin_helpers.notifications.platforms')).'|enum|required',
+            'platform' => 'name:Platforma|type:select|options:'.implode(',', config('admin_helpers.notifications.platforms', ['ios', 'android'])).'|enum|required',
             'table' => 'name:Tabuľka|index:row_id|type:select|options:'.implode(',', getRecipientTables()).'|enum',
             'row_id' => 'name:Záznam|type:integer|max:0',
             'access_token_id' => 'name:Access token|type:integer|min:0|inaccessible',
@@ -79,10 +79,6 @@ class NotificationsToken extends AdminModel
 
     public function getFilterStates()
     {
-        $school = admin()?->school;
-
-        $presentStages = $school ? $school->getStudentStagesAvailable() : null;
-
         return array_filter([
             [
                 'name' => _('DEV Vypnutý'),

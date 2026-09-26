@@ -7,7 +7,6 @@ use AdminHelpers\Notifications\Models\NotificationsToken;
 use AdminHelpers\Notifications\Utilities\RecipientsDevices;
 use Arr;
 use Exception;
-use Google\GuzzleClient;
 use Illuminate\Support\Facades\Cache;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\ApnsConfig;

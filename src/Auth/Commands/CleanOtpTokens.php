@@ -2,7 +2,6 @@
 
 namespace AdminHelpers\Auth\Commands;
 
-use AdminHelpers\Auth\Models\OtpToken;
 use Illuminate\Console\Command;
 
 class CleanOtpTokens extends Command

@@ -128,14 +128,19 @@ trait HasAuthorization
     {
         $user = auth()->user();
 
+        $token = $user && method_exists($user, 'currentAccessToken') ? $user->currentAccessToken() : null;
+
+        // A TransientToken (session authorization of Sanctum) is not stored and can not be deleted
+        $storedToken = $token && method_exists($token, 'delete') && method_exists($token, 'getKey') ? $token : null;
+
         // Remove access token
-        if ( $token = $user->currentAccessToken() ){
-            $token->delete();
+        if ( $storedToken ){
+            $storedToken->delete();
         }
 
-        // Flush notification tokens
-        if ( method_exists($user, 'notificationTokens') ){
-            $user->notificationTokens()->where('access_token_id', $token->getKey())->delete();
+        // Flush notification tokens of the removed access token
+        if ( $storedToken && method_exists($user, 'notificationTokens') ){
+            $user->notificationTokens()->where('access_token_id', $storedToken->getKey())->delete();
         }
 
         return autoAjax()->success(_('Boli ste úspešne odhlasený.'));

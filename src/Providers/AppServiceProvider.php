@@ -2,18 +2,37 @@
 
 namespace AdminHelpers\Providers;
 
-use Admin;
-use Admin\Providers\AdminHelperServiceProvider;
+use Admin\Providers\AdminPackageServiceProvider;
 use AdminHelpers\Auth\Providers\AuthServiceProvider;
-use AdminHelpers\Shared\Middleware\AuthOptionalMiddleware;
 use AdminHelpers\Importer\Providers\ImporterServiceProvider;
 use AdminHelpers\Notifications\Providers\NotificationsServiceProvider;
+use AdminHelpers\Shared\Middleware\AuthOptionalMiddleware;
 use AdminHelpers\Sms\SmsServiceProvider;
 
-class AppServiceProvider extends AdminHelperServiceProvider
+/**
+ * Main provider of the package. Feature modules (notifications, auth, importer...) have their
+ * own providers, enabled by the config of the package.
+ */
+class AppServiceProvider extends AdminPackageServiceProvider
 {
+    /**
+     * Config of the package, config('admin_helpers'). Keys missing in the published config
+     * of the project are added from it.
+     */
+    protected $config = [
+        'admin_helpers' => __DIR__.'/../Config/config.php',
+    ];
+
+    /**
+     * Files which projects can publish, tag => [source => target in the project].
+     */
+    protected $publishable = [
+        'admin_helpers.config' => [
+            __DIR__.'/../Config/config.php' => 'config/admin_helpers.php',
+        ],
+    ];
+
     protected $providers = [
-        ConfigServiceProvider::class,
         NotificationsServiceProvider::class,
         AuthServiceProvider::class,
         SessionServiceProvider::class,
@@ -21,23 +40,9 @@ class AppServiceProvider extends AdminHelperServiceProvider
         SmsServiceProvider::class,
     ];
 
-    protected $facades = [];
-
     protected $routeMiddleware = [
         'auth.optional' => AuthOptionalMiddleware::class,
     ];
-
-    /**
-     * Bootstrap the application events.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->registerModels();
-
-        $this->commands([]);
-    }
 
     /**
      * Register the service provider.
@@ -46,24 +51,9 @@ class AppServiceProvider extends AdminHelperServiceProvider
      */
     public function register()
     {
-        $this->registerFacades();
-
-        $this->registerProviders();
-
-        $this->bootRouteMiddleware();
-
-        $this->addPublishes();
+        parent::register();
 
         require_once __DIR__ . '/../Utilities/helpers.php';
     }
 
-    private function registerModels()
-    {
-        Admin::registerAdminModels(__dir__ . '/../Models/**', 'AdminHelpers\Models');
-    }
-
-    private function addPublishes()
-    {
-        $this->publishes([__DIR__ . '/../Config/config.php' => config_path('admin_helpers.php') ], 'admin_helpers.config');
-    }
 }

@@ -225,11 +225,8 @@ class AppNotification extends AdminModel
 
     public function getColorAttribute()
     {
-        if ( $this->termine_id ) {
-            return '#F27C49';
-        }
-
-        return '#49BFF2';
+        // A color passed in the notification data wins, projects may override this accessor
+        return $this->data['color'] ?? '#49BFF2';
     }
 
     public function getIconAttribute()

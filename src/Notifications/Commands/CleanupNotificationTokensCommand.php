@@ -152,7 +152,7 @@ class CleanupNotificationTokensCommand extends Command
 
         foreach ( $recipients as $recipient ) {
             $recipientIds = NotificationsToken::where('state', 'ok')
-                        ->where('table', $recipient->table)
+                        ->where('table', $recipient->getAttribute('table'))
                         ->where('row_id', $recipient->row_id)
                         ->orderBy('created_at', 'desc')
                         ->orderBy('id', 'desc')

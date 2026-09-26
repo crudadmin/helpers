@@ -2,6 +2,7 @@
 
 namespace AdminHelpers\Importer\Models;
 
+use Admin;
 use Admin\Eloquent\AdminModel;
 use Admin\Fields\Group;
 use AdminHelpers\Importer\Buttons\ProcessImportButton;
@@ -64,7 +65,7 @@ class ImportsFile extends AdminModel
     public function fields()
     {
         return [
-            'user' => 'name:Používateľ|belongsTo:admins,username|removeFromForm',
+            'user' => 'name:Používateľ|belongsTo:'.Admin::getAuthModel()->getTable().',username|removeFromForm',
             'name' => 'name:Popis',
             'type' => 'name:Typ importu|type:select|option::name|default:'.($this->getImportClassNameTypes()[0] ?? '').'|required|sub_component:ShowSampleImportFile',
             'file' => 'name:Importny súbor (.xls/.csv)|type:file|extensions:'.$this->getImportExtensions().'|required',

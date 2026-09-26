@@ -2,29 +2,43 @@
 
 namespace AdminHelpers\Providers;
 
-use Illuminate\Support\Facades\Schedule;
-use Admin\Providers\AdminHelperServiceProvider;
+use Admin\Providers\AdminPackageServiceProvider;
 use AdminHelpers\Commands\CleanSessionsCommand;
+use Illuminate\Console\Scheduling\Schedule;
 
-class SessionServiceProvider extends AdminHelperServiceProvider
+class SessionServiceProvider extends AdminPackageServiceProvider
 {
+    protected $commands = [
+        CleanSessionsCommand::class,
+    ];
+
     /**
-     * Register any application services.
+     * Bootstrap any application services.
      *
      * @return void
      */
-    public function register()
-    {
-        // Disable session lottery,
-        config()->set('session.lottery', [0, 100]);
-    }
-
     public function boot()
     {
-        $this->commands([
-            CleanSessionsCommand::class,
-        ]);
+        parent::boot();
 
-        Schedule::command('session:prune')->dailyAt('01:00')->onOneServer();
+        // Expired sessions are pruned by the scheduler instead of the session lottery
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
+            $schedule->command('session:prune')->dailyAt('01:00')->onOneServer();
+        });
+    }
+
+    /**
+     * Disable the session lottery, unless the project set its own.
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $lottery = config('session.lottery');
+
+        // [2, 100] is the default of Laravel, a project which did not change it gets [0, 100]
+        if ( $lottery === null || $lottery === [2, 100] ) {
+            config()->set('session.lottery', [0, 100]);
+        }
     }
 }

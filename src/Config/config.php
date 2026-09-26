@@ -90,5 +90,22 @@ return [
                 // 12345
             ],
         ]
-    ]
+    ],
+
+    'importer' => [
+        'enabled' => false,
+
+        // Available imports
+        'imports' => [
+            // [
+            //     'name' => 'Products import',
+            //     'class' => App\Utilities\Import\ProductsImport::class,
+            //     'extensions' => ['csv', 'xls', 'xlsx'],
+            //     'autoimport' => false,
+            // ],
+        ],
+
+        // Extensions allowed for every import, next to the extensions of each import
+        'extensions' => [],
+    ],
 ];

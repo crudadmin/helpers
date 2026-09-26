@@ -79,6 +79,46 @@ class BootstrapRequest extends BaseBootstrapRequest
     }
 
     /**
+     * Public methods of this class which are sections. Every other public method of this class,
+     * its parent and its traits (only, all, cache, setToken, getBundlePath...) is infrastructure
+     * and can not be requested as a section, even when a project overrides it.
+     *
+     * @var array<int, string>
+     */
+    protected $baseSections = ['get', 'guest', 'authenticated', 'auth'];
+
+    /**
+     * Sections are the public methods added by the project, and the base sections.
+     *
+     * @param  string  $method
+     * @return bool
+     */
+    protected function canLoadSection($method)
+    {
+        if ( parent::canLoadSection($method) === false || str_starts_with($method, '__') ) {
+            return false;
+        }
+
+        $method = strtolower($method);
+
+        // Data of the authenticated user only for an authorized request
+        if ( $method === 'authenticated' && $this->isAuthorized() === false ) {
+            return false;
+        }
+
+        if ( in_array($method, array_map('strtolower', $this->baseSections)) ) {
+            return true;
+        }
+
+        $infrastructure = array_map(
+            fn ($reflection) => strtolower($reflection->getName()),
+            (new \ReflectionClass(self::class))->getMethods(\ReflectionMethod::IS_PUBLIC)
+        );
+
+        return in_array($method, $infrastructure) === false;
+    }
+
+    /**
      * Determine what to do when client is set.
      *
      * @param  mixed  $client
