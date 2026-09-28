@@ -2,7 +2,7 @@
 
 namespace AdminHelpers\Utilities;
 
-use Admin\Core\Utilities\BootstrapRequest as BaseBootstrapRequest;
+use Admin\Core\Bootstrap\BootstrapRequest as BaseBootstrapRequest;
 use AdminHelpers\Auth\Utilities\AuthResponse;
 use AdminHelpers\Utilities\Concerns\HasBuildVersion;
 

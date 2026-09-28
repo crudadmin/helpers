@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a0e57bfc2692a852d415172c7063ca2e",
+    "content-hash": "777705892f81896261da638ba22c5a9b",
     "packages": [
         {
             "name": "brick/math",
@@ -142,32 +142,25 @@
         },
         {
             "name": "crudadmin/autoajax",
-            "version": "2.0.16",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/crudadmin/autoajax.git",
-                "reference": "81ac21679d49f91082c47a378ee790fc1bc5fac4"
-            },
+            "version": "3.0.x-dev",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/crudadmin/autoajax/zipball/81ac21679d49f91082c47a378ee790fc1bc5fac4",
-                "reference": "81ac21679d49f91082c47a378ee790fc1bc5fac4",
-                "shasum": ""
+                "type": "path",
+                "url": "../autoajax/php",
+                "reference": "88f1e5d1ce2d400af0b329ee2e326581d263e53b"
             },
             "require": {
-                "php": ">=8.0",
+                "php": ">=8.3",
                 "symfony/http-foundation": "*"
             },
             "type": "library",
             "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
                 "psr-4": {
                     "AutoAjax\\": "src"
-                }
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -178,11 +171,10 @@
                 }
             ],
             "description": "Auto Ajax form submission for Laravel or plain PHP",
-            "support": {
-                "issues": "https://github.com/crudadmin/autoajax/issues",
-                "source": "https://github.com/crudadmin/autoajax/tree/2.0.16"
-            },
-            "time": "2026-05-11T14:48:00+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "crudadmin/crudadmin",
@@ -190,10 +182,10 @@
             "dist": {
                 "type": "path",
                 "url": "../admin/dependencies/crudadmin",
-                "reference": "93f36fa8208312e407a299f302eebd2d4d8f5a59"
+                "reference": "a96d0184f30c1011beb07834781effbcc61b6114"
             },
             "require": {
-                "crudadmin/autoajax": "^2.0|dev-master",
+                "crudadmin/autoajax": "^3.0|3.0.x-dev",
                 "crudadmin/framework": "^6.0.1|dev-6.0-dev",
                 "crudadmin/resources": "^6.0|dev-master|dev-6.0-dev",
                 "gettext/gettext": "^4.6",
@@ -203,7 +195,6 @@
                 "php": ">=8.3"
             },
             "require-dev": {
-                "crudadmin/api": "dev-main",
                 "crudadmin/website": "dev-main",
                 "laravel/legacy-factories": "^1.4",
                 "orchestra/testbench": "^11.2",
@@ -233,7 +224,7 @@
                     "Admin\\": "src"
                 },
                 "files": [
-                    "src/Helpers/helpers.php"
+                    "src/helpers.php"
                 ]
             },
             "autoload-dev": {
@@ -247,13 +238,18 @@
                     "phpunit --testsuite \"Feature Tests\""
                 ],
                 "features:test": [
-                    "phpunit --testsuite \"Feature Tests\" --exclude-group none --log-junit .features/junit.xml"
+                    "phpunit --testsuite \"Feature Tests\" --exclude-group none --log-junit .features/junit.xml",
+                    "@features:test-api"
+                ],
+                "features:test-api": [
+                    "cd ../api && vendor/bin/phpunit --exclude-group none --log-junit ../crudadmin/.features/junit-api.xml"
                 ],
                 "features:map": [
                     "@php bin/feature-map"
                 ],
                 "features": [
                     "phpunit --testsuite \"Feature Tests\" --exclude-group none --log-junit .features/junit.xml || true",
+                    "cd ../api && vendor/bin/phpunit --exclude-group none --log-junit ../crudadmin/.features/junit-api.xml || true",
                     "@features:map"
                 ]
             },
@@ -291,7 +287,7 @@
             "dist": {
                 "type": "path",
                 "url": "../admin/dependencies/framework",
-                "reference": "4c90e6aff41115132ad67dcd2ee7168f74304d89"
+                "reference": "957a76a5f7b9d34d533afde322c2933ab63cd620"
             },
             "require": {
                 "intervention/image": "^4.0",
@@ -312,7 +308,7 @@
                     "Admin\\Core\\": "src"
                 },
                 "files": [
-                    "src/Helpers/helpers.php"
+                    "src/helpers.php"
                 ]
             },
             "license": [
@@ -346,7 +342,7 @@
             "dist": {
                 "type": "path",
                 "url": "../admin/dependencies/resources",
-                "reference": "0b33a34b027301b4117fa2b603eda95422a79ce0"
+                "reference": "4c764277af022112e7f9dc1e4ebcc355112975a4"
             },
             "require": {
                 "crudadmin/framework": "^6.0.1|dev-6.0-dev",
@@ -1554,16 +1550,16 @@
         },
         {
             "name": "intervention/image",
-            "version": "4.3.2",
+            "version": "4.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "bc15ed24bb88dc58f921daf78091a019ce42fe2c"
+                "reference": "b25085af6275b94173c4ba43cfc34ae42bd9e8d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/bc15ed24bb88dc58f921daf78091a019ce42fe2c",
-                "reference": "bc15ed24bb88dc58f921daf78091a019ce42fe2c",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/b25085af6275b94173c4ba43cfc34ae42bd9e8d2",
+                "reference": "b25085af6275b94173c4ba43cfc34ae42bd9e8d2",
                 "shasum": ""
             },
             "require": {
@@ -1572,11 +1568,10 @@
                 "php": "^8.3"
             },
             "require-dev": {
+                "intervention/coding-standard": "^1",
                 "mockery/mockery": "^1.6",
                 "phpstan/phpstan": "^2.1",
-                "phpunit/phpunit": "^12.0",
-                "slevomat/coding-standard": "~8.0",
-                "squizlabs/php_codesniffer": "^4"
+                "phpunit/phpunit": "^12.0"
             },
             "suggest": {
                 "ext-exif": "Recommended to be able to read EXIF data properly."
@@ -1610,7 +1605,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Intervention/image/issues",
-                "source": "https://github.com/Intervention/image/tree/4.3.2"
+                "source": "https://github.com/Intervention/image/tree/4.3.3"
             },
             "funding": [
                 {
@@ -1626,7 +1621,7 @@
                     "type": "ko_fi"
                 }
             ],
-            "time": "2026-08-29T05:35:03+00:00"
+            "time": "2026-09-26T06:48:23+00:00"
         },
         {
             "name": "laravel/framework",
@@ -2771,16 +2766,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "3.14.0",
+            "version": "3.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon.git",
-                "reference": "0023eaa2c9110e47446dd512a263c69c40cd41f2"
+                "reference": "34e9109535165bf1d7ff17a610492372ae73a896"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/0023eaa2c9110e47446dd512a263c69c40cd41f2",
-                "reference": "0023eaa2c9110e47446dd512a263c69c40cd41f2",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/34e9109535165bf1d7ff17a610492372ae73a896",
+                "reference": "34e9109535165bf1d7ff17a610492372ae73a896",
                 "shasum": ""
             },
             "require": {
@@ -2872,7 +2867,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-12T20:45:19+00:00"
+            "time": "2026-09-27T12:07:26+00:00"
         },
         {
             "name": "nette/schema",
@@ -9585,7 +9580,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.3.0"
+        "php": ">=8.3"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"

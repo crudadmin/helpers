@@ -2,8 +2,8 @@
 
 namespace AdminHelpers\Shared\Buttons;
 
+use Admin\Buttons\Button;
 use Admin\Eloquent\AdminModel;
-use Admin\Helpers\Button;
 
 class LogsButton extends Button
 {

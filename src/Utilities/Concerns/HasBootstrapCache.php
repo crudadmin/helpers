@@ -7,5 +7,5 @@ namespace AdminHelpers\Utilities\Concerns;
  */
 trait HasBootstrapCache
 {
-    use \Admin\Core\Utilities\Concerns\HasBootstrapCache;
+    use \Admin\Core\Bootstrap\Concerns\HasBootstrapCache;
 }

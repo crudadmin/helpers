@@ -2,7 +2,7 @@
 
 namespace AdminHelpers\Importer\Concerns;
 
-use Admin\Core\Helpers\Store\RequestState;
+use Admin\Core\State\RequestState;
 use Exception;
 use Throwable;
 

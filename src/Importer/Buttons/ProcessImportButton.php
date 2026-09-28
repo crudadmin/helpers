@@ -2,7 +2,7 @@
 
 namespace AdminHelpers\Importer\Buttons;
 
-use Admin\Helpers\Button;
+use Admin\Buttons\Button;
 use Admin\Eloquent\AdminModel;
 
 class ProcessImportButton extends Button

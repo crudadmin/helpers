@@ -2,8 +2,8 @@
 
 namespace AdminHelpers\Notifications\Admin\Buttons;
 
+use Admin\Buttons\Button;
 use Admin\Eloquent\AdminModel;
-use Admin\Helpers\Button;
 use Illuminate\Support\Collection;
 
 class EnableDebugNotificationToken extends Button

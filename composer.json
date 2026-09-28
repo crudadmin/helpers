@@ -56,6 +56,13 @@
     "repositories": [
         {
             "type": "path",
+            "url": "../autoajax/php",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
             "url": "../admin/dependencies/crudadmin",
             "options": {
                 "symlink": true

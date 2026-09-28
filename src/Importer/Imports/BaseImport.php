@@ -2,11 +2,11 @@
 
 namespace AdminHelpers\Importer\Imports;
 
+use Admin\Core\Storage\AdminFile;
 use Admin\Eloquent\AdminModel;
-use Admin\Core\Helpers\Storage\AdminFile;
 use AdminHelpers\Importer\Concerns\HasCastsSupport;
-use AdminHelpers\Importer\Utilities\FromXlsToArray;
 use AdminHelpers\Importer\Concerns\HasColumnsSupport;
+use AdminHelpers\Importer\Utilities\FromXlsToArray;
 
 class BaseImport
 {
