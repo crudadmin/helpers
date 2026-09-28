@@ -2,14 +2,14 @@
 
 namespace AdminHelpers\Importer\Concerns;
 
-use AdminHelpers\Importer\Rules\ImportFileRule;
+use Admin\Core\Helpers\Store\RequestState;
 use Exception;
 use Throwable;
 
 trait HasImportProcess
 {
     /**
-     * Determines if import has been validated
+     * Determines if import has been validated.
      *
      * @var bool
      */
@@ -18,12 +18,12 @@ trait HasImportProcess
     /**
      * * Boots import rule and tries to validate it.
      *
-     * @param  mixed $exception
+     * @param  mixed  $exception
      * @return void
      */
     public function validate($exception = false)
     {
-        if ( $this->validated ) {
+        if ($this->validated) {
             return $this;
         }
 
@@ -41,12 +41,12 @@ trait HasImportProcess
 
             // Set validated flag to true
             $this->validated = true;
-        } catch (Exception|Throwable $e){
+        } catch (Exception|Throwable $e) {
             $this->setImportState('error');
 
             report($e);
 
-            if ( $exception ) {
+            if ($exception) {
                 throw $e;
             } else {
                 autoAjax()->throw($e, 422);
@@ -57,7 +57,7 @@ trait HasImportProcess
     }
 
     /**
-     * Run import process
+     * Run import process.
      *
      * @return void
      */
@@ -82,7 +82,7 @@ trait HasImportProcess
     }
 
     /**
-     * Prepares metadata and other settings for import process
+     * Prepares metadata and other settings for import process.
      *
      * @return void
      */
@@ -100,32 +100,35 @@ trait HasImportProcess
         return $this;
     }
 
-
     /**
-     * Sets config ini for import process
+     * Sets config ini for import process.
      *
-     * @return void
+     * The limits apply to the rest of the current operation only. Long running processes
+     * (Laravel Octane, queue:work) get the previous values back before the next operation,
+     * a plain ini_set() would keep them for every following request or job of the worker.
+     *
+     * @return $this
      */
     public function setImportPHPConfig()
     {
-        //Set limits
-        ini_set('max_execution_time', 1200);
-        ini_set('memory_limit', '512M');
+        // Set limits
+        RequestState::iniSet('max_execution_time', 1200);
+        RequestState::iniSet('memory_limit', '512M');
 
         return $this;
     }
 
     /**
-     * Sets import state
+     * Sets import state.
      *
-     * @param string $state
+     * @param  string  $state
      * @return void
      */
     public function setImportState($state)
     {
         $this->state = $state;
 
-        if ( $this->exists ) {
+        if ($this->exists) {
             $this->save();
         }
 

@@ -6,6 +6,15 @@ use Admin\Core\Utilities\BootstrapRequest as BaseBootstrapRequest;
 use AdminHelpers\Auth\Utilities\AuthResponse;
 use AdminHelpers\Utilities\Concerns\HasBuildVersion;
 
+/**
+ * Bootstrap data of the client application.
+ *
+ * The logged client is resolved in the constructor and onClient() runs right there, so an
+ * instance belongs to one request. Create it per request (new, container make() or a real-time
+ * facade, which Laravel Octane resets before every request). Never bind it as a singleton, never
+ * resolve it in a service provider and never keep it in a static property: under Laravel Octane
+ * or a queue worker the next requests would get the client of the request which created it.
+ */
 class BootstrapRequest extends BaseBootstrapRequest
 {
     use HasBuildVersion;
@@ -21,7 +30,10 @@ class BootstrapRequest extends BaseBootstrapRequest
     public $client;
 
     /**
-     * __construct.
+     * Resolve the logged client of the current request.
+     *
+     * Not lazy on purpose: onClient() of projects has side effects (last activity, platform,
+     * language), which have to run when the bootstrap request is created.
      *
      * @return void
      */
@@ -95,18 +107,18 @@ class BootstrapRequest extends BaseBootstrapRequest
      */
     protected function canLoadSection($method)
     {
-        if ( parent::canLoadSection($method) === false || str_starts_with($method, '__') ) {
+        if (parent::canLoadSection($method) === false || str_starts_with($method, '__')) {
             return false;
         }
 
         $method = strtolower($method);
 
         // Data of the authenticated user only for an authorized request
-        if ( $method === 'authenticated' && $this->isAuthorized() === false ) {
+        if ($method === 'authenticated' && $this->isAuthorized() === false) {
             return false;
         }
 
-        if ( in_array($method, array_map('strtolower', $this->baseSections)) ) {
+        if (in_array($method, array_map('strtolower', $this->baseSections))) {
             return true;
         }
 
