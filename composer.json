@@ -17,8 +17,8 @@
     ],
     "require": {
         "php": ">=8.3",
-        "crudadmin/crudadmin": "^6.0|dev-6.0-dev",
-        "crudadmin/framework": "^6.0.1|dev-6.0-dev"
+        "crudadmin/crudadmin": "^6.0.3|dev-6.0-dev",
+        "crudadmin/framework": "^6.0.4|dev-6.0-dev"
     },
     "suggest": {
         "laravel/sanctum": "Required by the auth module (API tokens, logout, OAuth).",
