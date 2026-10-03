@@ -2,16 +2,19 @@
 
 namespace AdminHelpers\Auth\Concerns;
 
+use Illuminate\Support\Facades\Cache;
+
 trait HasOAuth
 {
     /**
-     * Into this session key will be stored authorization request
+     * Into this cache key will be stored authorization request
      *
-     * @return void
+     * @param  string  $code
+     * @return string
      */
-    private function getSessionKey()
+    private function getCacheKey($code)
     {
-        return 'oauth_crudadmin';
+        return 'oauth_crudadmin.'.$code;
     }
 
     /**
@@ -48,7 +51,8 @@ trait HasOAuth
     }
 
     /**
-     * Saves authorization request to logged user session
+     * Saves authorization request until the user signs in again. The request is kept in the cache,
+     * because the logout before the new sign in invalidates the whole session.
      *
      * @param  mixed $code
      * @param  mixed $request
@@ -56,27 +60,22 @@ trait HasOAuth
      */
     protected function saveAuthorizationRequest($code, $request)
     {
-        session()->put($this->getSessionKey().'.'.$code, $request->all());
-        session()->save();
+        Cache::put($this->getCacheKey($code), $request->all(), now()->addMinutes(15));
     }
 
     /**
-     * Returns authorization request from logged user session
+     * Returns authorization request of the code, only once
      *
      * @param  mixed $code
-     * @return void
+     * @return array
      */
     protected function getAuthorizationRequest($code)
     {
-        $params = session()->get($this->getSessionKey().'.'.$code);
+        $params = is_string($code) ? Cache::pull($this->getCacheKey($code)) : null;
 
         if ( !$params ) {
             abort(401, 'Invalid token');
         }
-
-        // Forget request from session
-        session()->forget($this->getSessionKey().'.'.$code);
-        session()->save();
 
         return $params;
     }
