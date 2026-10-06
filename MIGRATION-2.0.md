@@ -10,6 +10,12 @@
 - `AppNotification::getColorAttribute()` returns `data.color` or `#49BFF2`; the orange color of notifications with `termine_id` was project specific, override the accessor in the project model.
 - `isTestEnvironment()` is true for `local`, `staging` and the former misspelled `stagging` environment.
 
+## Bootstrap route for crudadmin/eshop (6. 10. 2026)
+
+`BootstrapResolver::routes()` registers the route in the namespace of the controller, so the visible
+routes of `crudadmin/website` name it `BootstrapController@index`. `crudadmin/eshop` 5 registers its
+`GET /bootstrap` by it and sets `admin_helpers.bootstrap.class` to its `BootstrapRequest` when empty.
+
 ## Bootstrap classes moved to `AdminHelpers\Bootstrap` (6. 10. 2026, breaking)
 
 Everything of the bootstrap moved from `Utilities` to `src/Bootstrap`. The old names were removed,

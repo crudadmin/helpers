@@ -75,12 +75,28 @@ class BootstrapResolver
     /**
      * Bootstrap route returning the requested sections, ?only=locale,auth (all sections without it).
      *
+     * Registered in the namespace of the controller, so the visible routes of crudadmin/website name
+     * it BootstrapController@index, the action the frontends of @crudadmin/eshop look for.
+     *
      * @param  string  $uri
      * @param  string  $controller
      * @return \Illuminate\Routing\Route
      */
     public static function routes($uri = 'bootstrap', $controller = BootstrapController::class)
     {
-        return Route::any($uri, [$controller, 'index']);
+        $controller = ltrim($controller, '\\');
+        $namespace = substr($controller, 0, (int) strrpos($controller, '\\'));
+
+        if ($namespace === '') {
+            return Route::any($uri, $controller.'@index');
+        }
+
+        $route = null;
+
+        Route::group(['namespace' => '\\'.$namespace], function () use ($uri, $controller, $namespace, &$route) {
+            $route = Route::any($uri, ltrim(substr($controller, strlen($namespace)), '\\').'@index');
+        });
+
+        return $route;
     }
 }
