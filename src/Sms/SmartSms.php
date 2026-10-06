@@ -56,7 +56,11 @@ class SmartSms
                 'message' => $message,
             ];
 
-            $response = $this->client->get('/api/send.do?'.http_build_query($params));
+            // POST body over https: the credentials must never be part of the URL, which ends up
+            // in access logs of proxies and in exception messages of the HTTP client.
+            $response = $this->client->post('/api/send.do', [
+                'form_params' => $params,
+            ]);
             $body = (string) $response->getBody();
 
             // If error, handle it
@@ -92,6 +96,8 @@ class SmartSms
             101 => 'Nesprávna autorizácia',
             102 => 'Nesprávne prihlasovacie meno alebo heslo',
             103 => 'Nedostatok kreditu',
+            // The calling server's IP must be allowed in the smartSMS profile
+            105 => 'Nesprávna IP servera pre API komunikáciu (povoľte ju v Nastavenia -> Môj užívateľský profil -> Zoznam povolených IP adries pre volania API)',
             301 => 'ID SMS neexistuje',
             400 => 'Nesprávne ID SMS, ktorej zisťujete status',
             999 => 'Interná chyba (kontaktujte nás prosím)',

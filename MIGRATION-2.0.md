@@ -39,6 +39,7 @@ Search the project for `AdminHelpers\Utilities\Bootstrap`, `Utilities\Concerns\H
 
 All changes are backward compatible; new behaviour is opt-in by config unless noted.
 
+- `AdminHelpers\Sms\SmartSms` sends `POST https://smartsms.sk/api/send.do` with the parameters in the form body. Credentials are no longer part of the URL. Config keys (`smartsms.*`, `admin_helpers.smartsms.*`) are unchanged. Error `105` (IP of the calling server not allowed for the API) has its own message now.
 - Bootstrap cache (framework): `forgetCache($section, $key = null, $locale = null)` invalidates a cached section, all locales and keys without arguments. Cache keys get a `.v{n}` suffix after the first `forgetCache()` of the section.
 - Opt-in section whitelist (framework): `protected $sections = [...]` or the `Admin\Core\Bootstrap\Attributes\BootstrapSection` attribute (inherited by overrides, both combine). Without them every public method added by the project stays a section.
 - `BootstrapRequest::setToken($name, $abilities = ['*'])` creates the token once per instance; repeated `auth()` calls return the same token. New `withClient($client)`.
