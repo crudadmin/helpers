@@ -7,6 +7,7 @@ use AdminHelpers\Auth\Controllers\OTPController;
 use AdminHelpers\Auth\Controllers\LoginController;
 use AdminHelpers\Auth\Controllers\RegisterController;
 use AdminHelpers\Auth\Controllers\OAuthController;
+use AdminHelpers\Auth\Controllers\PasswordController;
 use AdminHelpers\Auth\Controllers\IdentifierController;
 use AdminHelpers\Auth\Middleware\FixPhoneNumber;
 
@@ -103,6 +104,26 @@ class AdminAuth
         // OTP throttle on sending code
         $this->otpMiddleware(function () use ($controller) {
             Route::post('auth/register/otp', [$controller, 'registerOTP']);
+        });
+    }
+
+    /**
+     * Password reset routes: the link is sent by e-mail, the new password is set with its token
+     * and the user is logged in (same response as the login).
+     *
+     * @param  $controller
+     *
+     * @return void
+     */
+    public function password($controller = PasswordController::class)
+    {
+        $this->middleware(function () use ($controller) {
+            Route::post('auth/password/reset', [$controller, 'resetPassword']);
+        });
+
+        // Sending e-mails is throttled like OTP codes
+        $this->otpMiddleware(function () use ($controller) {
+            Route::post('auth/password/forgot', [$controller, 'forgotPassword']);
         });
     }
 

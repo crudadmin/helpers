@@ -79,6 +79,34 @@ return [
         // Default verificator, email or phone
         'verificator' => env('AUTH_VERIFICATOR', 'email'),
 
+        // Guard of the authenticated model (e.g. the Sanctum guard of e-shop clients,
+        // config('admin_eshop.client.guard')). Null keeps the default guard and the guard of the model.
+        'guard' => null,
+
+        // Model registering or logging in, e.g. AdminEshop\Models\Clients\Client::class.
+        // Null takes the model of the provider of the guard.
+        'model' => null,
+
+        // Response of login, registration and password reset:
+        // 'auth' - data: {driver, user, token} (AuthResponse)
+        // 'bootstrap' - store: authenticated() sections of the bootstrap request + auth
+        'response' => 'auth',
+
+        // Dispatch Illuminate\Auth\Events\Login after login, registration and password reset
+        // (token guards do not dispatch it), e.g. for the e-shop cart merge.
+        'login_event' => false,
+
+        'password' => [
+            // Password broker, the user provider of the guard by default
+            'broker' => null,
+
+            // Link of the client app setting the password, {token} and {email} placeholders
+            'reset_url' => env('AUTH_PASSWORD_RESET_URL'),
+
+            // Minutes of validity of a broker missing in auth.passwords
+            'expire' => 60,
+        ],
+
         'oauth' => [
             // Registered Oauth app ids
             'apps' => [

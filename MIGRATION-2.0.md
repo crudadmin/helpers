@@ -44,3 +44,15 @@ All changes are backward compatible; new behaviour is opt-in by config unless no
 - Opt-in section whitelist (framework): `protected $sections = [...]` or the `Admin\Core\Bootstrap\Attributes\BootstrapSection` attribute (inherited by overrides, both combine). Without them every public method added by the project stays a section.
 - `BootstrapRequest::setToken($name, $abilities = ['*'])` creates the token once per instance; repeated `auth()` calls return the same token. New `withClient($client)`.
 - `AdminHelpers\Bootstrap\BootstrapResolver` (`getClass()`, `make()`, `appType()`, `routes()`), `bootstrapRequest()` function and `AdminHelpers\Bootstrap\BootstrapController`: the `app-type` header selects the bootstrap class from `admin_helpers.bootstrap.app_types`, the default `admin_helpers.bootstrap.class` (or the helpers `BootstrapRequest`) otherwise.
+- Auth config `admin_helpers.auth.guard`, `auth.model`, `auth.response` (`auth` | `bootstrap`), `auth.login_event`, `auth.password.*`. With `auth.guard` set, `makeAuthResponse()` sets the user into that guard instead of `$user->getGuard()`, and `getAuthModel()` reads the logged user of that guard.
+- `AuthResponse` returns the model itself when it has no `setAuthResponse()` method.
+- Password reset: `AdminAuth::password()` (`POST auth/password/forgot`, `POST auth/password/reset`), `AdminHelpers\Auth\Controllers\PasswordController`, `HasPasswordReset`, model trait `HasPasswordResetLink`, `AdminHelpers\Auth\Utilities\PasswordReset::sendSetPasswordLink($user, $guard = null)` with `SetPasswordNotification`.
+
+## OTP verificator and GET /user (5. 10. 2026)
+
+- `getVerificator()` returns `null` while `admin_helpers.auth.otp.enabled` is not `true`: the
+  registration and the OTP login need no code then. With OTP off the OTP models are not
+  registered, a configured `auth.verificator` (default `email`) made the registration wait for a
+  code nobody could create. Projects with OTP verification turn `otp.enabled` on.
+- `GET /user` answers without the message "Boli ste úspešne prihlásený." (only a login,
+  registration or password reset carries it, `authorizedMessage($type)`).

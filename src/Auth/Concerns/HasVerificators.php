@@ -11,6 +11,12 @@ trait HasVerificators
      */
     public function getVerificator($user = null)
     {
+        // Without the OTP authorization its models are not registered (otpModel() is null), a
+        // verificator would make the registration and login wait for a code nobody can create
+        if ( ! hasOtpEnabled() ) {
+            return null;
+        }
+
         $defaultVerificator = config('admin_helpers.auth.verificator', 'email');
         $verificator = request('verificator', $defaultVerificator);
 

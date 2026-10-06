@@ -60,7 +60,8 @@ class AuthResponse implements Arrayable
      */
     public function toUserResponse($user)
     {
-        if ( $this->userResponse ) {
+        // Models without the response method (not CrudAdmin authenticatables) are returned as they are
+        if ( $this->userResponse && method_exists($user, $this->userResponse) ) {
             return $user->{$this->userResponse}();
         }
 
