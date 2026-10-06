@@ -52,6 +52,21 @@ return [
         'ionic_path' => env('IONIC_PATH'),
     ],
 
+    // Bootstrap request of the client application (BootstrapResolver, bootstrapRequest())
+    'bootstrap' => [
+        // Default AppRequest class of the project, the helpers BootstrapRequest when empty
+        'class' => null,
+
+        // Header with the application type, null disables the selection
+        'header' => 'app-type',
+
+        // Application type => AppRequest class, usually extending the default class.
+        // Unknown types use the default class.
+        'app_types' => [
+            // 'courier' => App\Utilities\Bootstrap\CourierAppRequest::class,
+        ],
+    ],
+
     // SmartSms credentials, config/smartsms.php of the project wins
     'smartsms' => [
         'from' => env('SMARTSMS_FROM', true),

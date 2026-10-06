@@ -1,10 +1,10 @@
 <?php
 
-namespace AdminHelpers\Utilities;
+namespace AdminHelpers\Bootstrap;
 
 use Admin\Core\Bootstrap\BootstrapRequest as BaseBootstrapRequest;
 use AdminHelpers\Auth\Utilities\AuthResponse;
-use AdminHelpers\Utilities\Concerns\HasBuildVersion;
+use AdminHelpers\Bootstrap\Concerns\HasBuildVersion;
 
 /**
  * Bootstrap data of the client application.
@@ -28,6 +28,20 @@ class BootstrapRequest extends BaseBootstrapRequest
      * Logged client/user.
      */
     public $client;
+
+    /**
+     * Sanctum abilities of the token created by auth().
+     *
+     * @var array<int, string>
+     */
+    protected $tokenAbilities = ['*'];
+
+    /**
+     * Token payload already created by auth() for this instance.
+     *
+     * @var array|null
+     */
+    private $issuedToken = null;
 
     /**
      * Resolve the logged client of the current request.
@@ -58,14 +72,39 @@ class BootstrapRequest extends BaseBootstrapRequest
     }
 
     /**
-     * Set authentication token into object.
+     * Use the given client instead of the one of the request guard, e.g. right after a login, when
+     * the guard of the project may not be the default one.
      *
-     * @param  string  $token
+     * @param  mixed  $client
      * @return self
      */
-    public function setToken($token)
+    public function withClient($client)
     {
+        if ($client && $client !== $this->client) {
+            $this->client = $client;
+
+            $this->onClient($client);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the name of the Sanctum token which auth() creates (once per instance).
+     *
+     * @param  string  $token
+     * @param  array  $abilities  sanctum abilities of the created token
+     * @return self
+     */
+    public function setToken($token, array $abilities = ['*'])
+    {
+        // Another token name or abilities ask for another token
+        if ($token !== $this->token || $abilities !== $this->tokenAbilities) {
+            $this->issuedToken = null;
+        }
+
         $this->token = $token;
+        $this->tokenAbilities = $abilities;
 
         return $this;
     }
@@ -87,7 +126,22 @@ class BootstrapRequest extends BaseBootstrapRequest
      */
     public function auth()
     {
-        return (new AuthResponse($this->client, $this->token))->toArray();
+        // A guest has no auth data, AuthResponse needs a user
+        if (! $this->client) {
+            return [];
+        }
+
+        // The token is created only once, auth() may be called by several sections or responses
+        // of one request and each call would store another personal access token.
+        $data = (new AuthResponse($this->client, $this->issuedToken ? false : $this->token, abilities: $this->tokenAbilities))->toArray();
+
+        if (isset($data['token'])) {
+            $this->issuedToken = $data['token'];
+        } elseif ($this->issuedToken) {
+            $data['token'] = $this->issuedToken;
+        }
+
+        return $data;
     }
 
     /**

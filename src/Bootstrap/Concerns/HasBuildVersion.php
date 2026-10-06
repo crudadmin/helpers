@@ -1,6 +1,6 @@
 <?php
 
-namespace AdminHelpers\Utilities\Concerns;
+namespace AdminHelpers\Bootstrap\Concerns;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
