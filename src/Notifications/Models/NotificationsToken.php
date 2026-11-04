@@ -62,7 +62,7 @@ class NotificationsToken extends AdminModel
             'token' => 'name:Token',
             'state' => 'name:Stav tokenu|type:select|options:ok,invalid,unknown|enum|index|default:ok',
             'debug' => 'name:Debug zapnutý|type:checkbox|default:0|index',
-            'created_at' => 'name:Datum vytvorenia|type:datetime|default:CURRENT_TIMESTAMP|required|column_visible'
+            'created_at' => 'name:Datum vytvorenia|type:datetime|default:CURRENT_TIMESTAMP|required|columnVisible'
         ];
     }
 
